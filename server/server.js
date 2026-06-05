@@ -27,7 +27,18 @@ app.use('/api/orders', require('./routes/orderRoutes'));
 app.use('/api/admin', require('./routes/adminRoutes'));
 
 // Health check
-app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date() }));
+app.get('/api/health', (req, res) => res.json({ status: 'ok', timestamp: new Date(), restarted: true }));
+
+// Temporary DNS check
+app.get('/dns', async (req, res) => {
+  try {
+    const dns = require('dns').promises;
+    const srv = await dns.resolveSrv('_mongodb._tcp.cluster0.blkk7ui.mongodb.net');
+    res.json({ success: true, srv });
+  } catch (err) {
+    res.json({ success: false, error: err.message });
+  }
+});
 
 // 404 handler
 app.use((req, res) => {

@@ -24,78 +24,62 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar-custom">
-      <div className="container">
-        <div className="d-flex align-items-center justify-content-between gap-3 flex-wrap">
-          {/* Brand */}
-          <Link to="/" className="navbar-brand-custom text-decoration-none">
-            <i className="bi bi-bag-heart-fill me-2"></i>ShopZone
-          </Link>
-
-          {/* Search */}
-          <form onSubmit={handleSearch} className="flex-grow-1" style={{ maxWidth: '450px' }}>
-            <div className="search-bar-nav">
-              <i className="bi bi-search"></i>
-              <input
-                type="text"
-                placeholder="Search products, brands..."
-                value={keyword}
-                onChange={e => setKeyword(e.target.value)}
-              />
-              <button type="submit" style={{ background: 'none', border: 'none', cursor: 'pointer', color: 'var(--primary-light)' }}>
-                <i className="bi bi-arrow-right-circle-fill"></i>
-              </button>
-            </div>
-          </form>
-
-          {/* Icons */}
-          <div className="d-flex align-items-center gap-2">
-            <Link to="/wishlist" className="nav-icon-btn" title="Wishlist">
-              <i className="bi bi-heart"></i>
-              {wishlistCount > 0 && <span className="nav-badge">{wishlistCount}</span>}
-            </Link>
-            <Link to="/cart" className="nav-icon-btn" title="Cart">
-              <i className="bi bi-bag"></i>
-              {cartCount > 0 && <span className="nav-badge">{cartCount}</span>}
-            </Link>
-
-            {user ? (
-              <div className="dropdown">
-                <button className="nav-icon-btn" data-bs-toggle="dropdown" style={{ cursor: 'pointer' }}>
-                  <i className="bi bi-person-circle"></i>
-                </button>
-                <ul className="dropdown-menu dropdown-menu-end" style={{ background: 'var(--dark-2)', border: '1px solid var(--border)', minWidth: '180px' }}>
-                  <li><span className="dropdown-item-text" style={{ color: 'var(--text-muted)', fontSize: '13px', padding: '8px 16px' }}>Hi, {user.name?.split(' ')[0]}</span></li>
-                  <li><hr className="dropdown-divider" style={{ borderColor: 'var(--border)' }} /></li>
-                  <li><Link className="dropdown-item" style={{ color: 'var(--text-secondary)' }} to="/profile">My Profile</Link></li>
-                  <li><Link className="dropdown-item" style={{ color: 'var(--text-secondary)' }} to="/orders">My Orders</Link></li>
-                  {user.role === 'admin' && (
-                    <li><Link className="dropdown-item" style={{ color: 'var(--primary-light)' }} to="/admin/dashboard">Admin Panel</Link></li>
-                  )}
-                  <li><hr className="dropdown-divider" style={{ borderColor: 'var(--border)' }} /></li>
-                  <li><button className="dropdown-item" style={{ color: 'var(--danger)' }} onClick={handleLogout}>Logout</button></li>
-                </ul>
+    <>
+      <nav className="nav-neo">
+        <Link to="/" className="nav-neo-logo">SHOP<span>ZONE</span></Link>
+        <form onSubmit={handleSearch} className="nav-neo-search" style={{ margin: 0 }}>
+          <input 
+            type="text" 
+            placeholder="SEARCH [e.g. tees, hoodies]..." 
+            value={keyword}
+            onChange={e => setKeyword(e.target.value)}
+          />
+          <button type="submit" style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer' }}>
+            <i className="bi bi-search"></i>
+          </button>
+        </form>
+        <div className="nav-neo-actions">
+          {user ? (
+            <div className="dropdown">
+              <div className="nav-neo-sign" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--chalk)' }} data-bs-toggle="dropdown">
+                {user.name?.split(' ')[0].toUpperCase()} / <i className="bi bi-chevron-down" style={{ fontSize: '12px' }}></i>
               </div>
-            ) : (
-              <Link to="/login" className="btn-primary-custom" style={{ padding: '8px 20px', fontSize: '14px' }}>
-                <i className="bi bi-person"></i> Login
-              </Link>
-            )}
-          </div>
-        </div>
+              <ul className="dropdown-menu dropdown-menu-end" style={{ background: 'var(--ink)', border: '2px solid var(--ink-3)', borderRadius: 0, marginTop: '10px' }}>
+                <li><Link className="dropdown-item" style={{ color: 'var(--chalk)', fontFamily: 'var(--font-mono)' }} to="/profile">PROFILE</Link></li>
+                <li><Link className="dropdown-item" style={{ color: 'var(--chalk)', fontFamily: 'var(--font-mono)' }} to="/orders">ORDERS</Link></li>
+                {user.role === 'admin' && (
+                  <li><Link className="dropdown-item" style={{ color: 'var(--acid)', fontFamily: 'var(--font-mono)' }} to="/admin/dashboard">ADMIN</Link></li>
+                )}
+                <li><hr className="dropdown-divider" style={{ borderColor: 'var(--ink-3)' }} /></li>
+                <li><button className="dropdown-item" style={{ color: 'var(--hot)', fontFamily: 'var(--font-mono)' }} onClick={handleLogout}>LOGOUT</button></li>
+              </ul>
+            </div>
+          ) : (
+            <Link to="/login" className="nav-neo-sign text-decoration-none" style={{ color: 'var(--chalk)' }}>SIGN IN /</Link>
+          )}
 
-        {/* Category nav */}
-        <div className="d-flex align-items-center gap-3 mt-2 flex-wrap" style={{ paddingTop: '10px', borderTop: '1px solid var(--border)' }}>
-          <Link to="/products" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>All Products</Link>
-          <Link to="/products?category=electronics" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>Electronics</Link>
-          <Link to="/products?category=fashion" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>Fashion</Link>
-          <Link to="/products?category=home-living" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>Home & Living</Link>
-          <Link to="/products?category=sports" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>Sports</Link>
-          <Link to="/products?category=beauty" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>Beauty</Link>
-          <Link to="/products?category=books" style={{ color: 'var(--text-secondary)', fontSize: '14px', fontWeight: 500 }}>Books</Link>
+          <Link to="/wishlist" className="nav-neo-btn">
+            <i className="bi bi-heart"></i>
+            {wishlistCount > 0 && <span className="nav-neo-badge">{wishlistCount}</span>}
+          </Link>
+          <Link to="/cart" className="nav-neo-btn">
+            <i className="bi bi-bag"></i>
+            {cartCount > 0 && <span className="nav-neo-badge">{cartCount}</span>}
+          </Link>
         </div>
+      </nav>
+      
+      {/* Category nav */}
+      <div style={{ background: 'var(--ink-2)', borderBottom: '2px solid var(--ink)', padding: '10px 48px', display: 'flex', gap: '24px', flexWrap: 'wrap', overflowX: 'auto' }}>
+        <Link to="/products" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>All Products</Link>
+        <Link to="/products?category=electronics" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Electronics</Link>
+        <Link to="/products?category=fashion" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Fashion</Link>
+        <Link to="/products?category=home-living" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Home & Living</Link>
+        <Link to="/products?category=sports" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Sports</Link>
+        <Link to="/products?category=beauty" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Beauty</Link>
+        <Link to="/products?category=books" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Books</Link>
       </div>
-    </nav>
+    </>
   );
 };
 

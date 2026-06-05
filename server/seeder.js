@@ -68,8 +68,13 @@ const seedDB = async () => {
     { name: 'Yoga Mat Premium', description: 'Anti-slip premium yoga mat with carrying strap.', price: 1499, discountPrice: 999, category: sports, brand: 'Boldfit', stock: 300, isFeatured: false, ratings: 4.6, numReviews: 78 },
     { name: 'Atomic Habits', description: 'Best-selling self-help book by James Clear.', price: 599, discountPrice: 399, category: books, brand: 'Penguin', stock: 500, isFeatured: false, ratings: 4.8, numReviews: 400 },
     { name: 'Vitamin C Serum', description: 'Brightening vitamin C serum for glowing skin.', price: 899, discountPrice: 699, category: beauty, brand: 'Minimalist', stock: 180, isFeatured: true, ratings: 4.7, numReviews: 150 },
-    { name: 'Boat Airdopes 141', description: 'True wireless earbuds with 42-hour battery backup.', price: 1999, discountPrice: 999, category: elec, brand: 'boAt', stock: 250, isFeatured: false, ratings: 4.2, numReviews: 320 },
+    { name: 'Boat Airdopes 141', description: 'True wireless earbuds with 42-hour battery backup.', price: 1999, discountPrice: 999, category: elec, brand: 'boAt', stock: 250, isFeatured: true, ratings: 4.2, numReviews: 320 },
     { name: 'Stainless Steel Water Bottle', description: '1L insulated water bottle keeping drinks hot/cold for 24hrs.', price: 799, discountPrice: 599, category: home, brand: 'Milton', stock: 400, isFeatured: false, ratings: 4.5, numReviews: 90 },
+    { name: 'Designer Kurta Sets', description: 'Beautiful designer kurta sets for festive occasions.', price: 999, discountPrice: 249, category: fashion, brand: 'Biba', stock: 100, isFeatured: true, ratings: 4.6, numReviews: 85 },
+    { name: 'Prestige Mixer Grinder', description: 'Powerful 750W mixer grinder with 3 stainless steel jars.', price: 2999, discountPrice: 499, category: home, brand: 'Prestige', stock: 50, isFeatured: true, ratings: 4.3, numReviews: 210 },
+    { name: 'Infinix NOTE EDGE', description: '3D curved 1.5K AMOLED display with 108MP camera.', price: 29999, discountPrice: 24999, category: elec, brand: 'Infinix', stock: 40, isFeatured: true, ratings: 4.8, numReviews: 120 },
+    { name: 'Adidas Running Shoes', description: 'Lightweight and breathable running shoes for daily workouts.', price: 3999, discountPrice: 1999, category: fashion, brand: 'Adidas', stock: 150, isFeatured: true, ratings: 4.5, numReviews: 300 },
+    { name: 'Denver Deodorant Body Spray', description: 'Long-lasting masculine fragrance for all-day freshness.', price: 399, discountPrice: 299, category: beauty, brand: 'Denver', stock: 200, isFeatured: true, ratings: 4.4, numReviews: 450 },
   ];
 
   await Product.insertMany(products);

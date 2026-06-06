@@ -71,13 +71,13 @@ const Navbar = () => {
       
       {/* Category nav */}
       <div style={{ background: 'var(--ink-2)', borderBottom: '2px solid var(--ink)', padding: '10px 48px', display: 'flex', gap: '24px', flexWrap: 'wrap', overflowX: 'auto' }}>
-        <Link to="/products" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>All Products</Link>
-        <Link to="/products?category=electronics" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Electronics</Link>
-        <Link to="/products?category=fashion" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Fashion</Link>
-        <Link to="/products?category=home-living" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Home & Living</Link>
-        <Link to="/products?category=sports" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Sports</Link>
-        <Link to="/products?category=beauty" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Beauty</Link>
-        <Link to="/products?category=books" style={{ color: 'var(--muted)', fontFamily: 'var(--font-mono)', fontSize: '12px', textTransform: 'uppercase', textDecoration: 'none', letterSpacing: '1px' }}>Books</Link>
+        <Link to="/products" className={`category-link ${!searchParams.get('category') ? 'active' : ''}`}>All Products</Link>
+        <Link to="/products?category=electronics" className={`category-link ${searchParams.get('category') === 'electronics' ? 'active' : ''}`}>Electronics</Link>
+        <Link to="/products?category=fashion" className={`category-link ${searchParams.get('category') === 'fashion' ? 'active' : ''}`}>Fashion</Link>
+        <Link to="/products?category=home-living" className={`category-link ${searchParams.get('category') === 'home-living' ? 'active' : ''}`}>Home & Living</Link>
+        <Link to="/products?category=sports" className={`category-link ${searchParams.get('category') === 'sports' ? 'active' : ''}`}>Sports</Link>
+        <Link to="/products?category=beauty" className={`category-link ${searchParams.get('category') === 'beauty' ? 'active' : ''}`}>Beauty</Link>
+        <Link to="/products?category=books" className={`category-link ${searchParams.get('category') === 'books' ? 'active' : ''}`}>Books</Link>
       </div>
     </>
   );

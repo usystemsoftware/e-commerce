@@ -99,7 +99,7 @@ const Navbar = () => {
             <Link to="/login" className="ajio-topbar-link">SIGN IN /</Link>
           )}
         </div>
-      </nav>
+      </div>
 
       <div className="ajio-mainbar">
         <Link to="/" className="ajio-brand">SHOP<span>ZONE</span></Link>
@@ -191,7 +191,7 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-    </>
+    </header>
   );
 };
 

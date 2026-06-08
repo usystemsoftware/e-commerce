@@ -11,7 +11,6 @@ const Navbar = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
-  const [menuOpen, setMenuOpen] = useState(false);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -24,62 +23,65 @@ const Navbar = () => {
   };
 
   return (
-    <>
-      <nav className="nav-neo">
-        <Link to="/" className="nav-neo-logo">SHOP<span>ZONE</span></Link>
-        <form onSubmit={handleSearch} className="nav-neo-search" style={{ margin: 0 }}>
-          <input 
-            type="text" 
-            placeholder="SEARCH [e.g. tees, hoodies]..." 
-            value={keyword}
-            onChange={e => setKeyword(e.target.value)}
-          />
-          <button type="submit" style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer' }}>
-            <i className="bi bi-search"></i>
-          </button>
-        </form>
-        <div className="nav-neo-actions">
+    <header className="ajio-navbar-wrapper">
+      <div className="ajio-topbar">
+        <div className="ajio-topbar-links">
           {user ? (
             <div className="dropdown">
-              <div className="nav-neo-sign" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--chalk)' }} data-bs-toggle="dropdown">
-                {user.name?.split(' ')[0].toUpperCase()} / <i className="bi bi-chevron-down" style={{ fontSize: '12px' }}></i>
-              </div>
-              <ul className="dropdown-menu dropdown-menu-end" style={{ background: 'var(--ink)', border: '2px solid var(--ink-3)', borderRadius: 0, marginTop: '10px' }}>
-                <li><Link className="dropdown-item" style={{ color: 'var(--chalk)', fontFamily: 'var(--font-mono)' }} to="/profile">PROFILE</Link></li>
-                <li><Link className="dropdown-item" style={{ color: 'var(--chalk)', fontFamily: 'var(--font-mono)' }} to="/orders">ORDERS</Link></li>
+              <span className="ajio-topbar-link" data-bs-toggle="dropdown" style={{ cursor: 'pointer' }}>
+                {user.name?.split(' ')[0].toUpperCase()} / <i className="bi bi-chevron-down" style={{ fontSize: '10px' }}></i>
+              </span>
+              <ul className="dropdown-menu dropdown-menu-end" style={{ borderRadius: 0, marginTop: '10px', fontSize: '14px' }}>
+                <li><Link className="dropdown-item" to="/profile">PROFILE</Link></li>
+                <li><Link className="dropdown-item" to="/orders">ORDERS</Link></li>
                 {user.role === 'admin' && (
-                  <li><Link className="dropdown-item" style={{ color: 'var(--acid)', fontFamily: 'var(--font-mono)' }} to="/admin/dashboard">ADMIN</Link></li>
+                  <li><Link className="dropdown-item" to="/admin/dashboard">ADMIN</Link></li>
                 )}
-                <li><hr className="dropdown-divider" style={{ borderColor: 'var(--ink-3)' }} /></li>
-                <li><button className="dropdown-item" style={{ color: 'var(--hot)', fontFamily: 'var(--font-mono)' }} onClick={handleLogout}>LOGOUT</button></li>
+                <li><hr className="dropdown-divider" /></li>
+                <li><button className="dropdown-item" onClick={handleLogout}>LOGOUT</button></li>
               </ul>
             </div>
           ) : (
-            <Link to="/login" className="nav-neo-sign text-decoration-none" style={{ color: 'var(--chalk)' }}>SIGN IN /</Link>
+            <Link to="/login" className="ajio-topbar-link">SIGN IN /</Link>
           )}
+        </div>
+      </div>
 
-          <Link to="/wishlist" className="nav-neo-btn">
+      <div className="ajio-mainbar">
+        <Link to="/" className="ajio-brand">SHOP<span>ZONE</span></Link>
+        <nav className="ajio-nav-links">
+          <Link to="/products" className={`ajio-nav-link ${!searchParams.get('category') ? 'active' : ''}`}>All Products <i className="bi bi-chevron-down"></i></Link>
+          <Link to="/products?category=electronics" className={`ajio-nav-link ${searchParams.get('category') === 'electronics' ? 'active' : ''}`}>Electronics <i className="bi bi-chevron-down"></i></Link>
+          <Link to="/products?category=fashion" className={`ajio-nav-link ${searchParams.get('category') === 'fashion' ? 'active' : ''}`}>Fashion <i className="bi bi-chevron-down"></i></Link>
+          <Link to="/products?category=home-living" className={`ajio-nav-link ${searchParams.get('category') === 'home-living' ? 'active' : ''}`}>Home & Living <i className="bi bi-chevron-down"></i></Link>
+          <Link to="/products?category=sports" className={`ajio-nav-link ${searchParams.get('category') === 'sports' ? 'active' : ''}`}>Sports <i className="bi bi-chevron-down"></i></Link>
+          <Link to="/products?category=beauty" className={`ajio-nav-link ${searchParams.get('category') === 'beauty' ? 'active' : ''}`}>Beauty <i className="bi bi-chevron-down"></i></Link>
+          <Link to="/products?category=books" className={`ajio-nav-link ${searchParams.get('category') === 'books' ? 'active' : ''}`}>Books <i className="bi bi-chevron-down"></i></Link>
+        </nav>
+        
+        <div className="ajio-tools">
+          <form onSubmit={handleSearch} className="ajio-search-box">
+            <input 
+              type="text" 
+              placeholder="SEARCH [e.g. tees, hoodies]..." 
+              value={keyword}
+              onChange={e => setKeyword(e.target.value)}
+            />
+            <button type="submit">
+              <i className="bi bi-search"></i>
+            </button>
+          </form>
+          <Link to="/wishlist" className="ajio-icon-circle">
             <i className="bi bi-heart"></i>
-            {wishlistCount > 0 && <span className="nav-neo-badge">{wishlistCount}</span>}
+            {wishlistCount > 0 && <span className="ajio-badge-count">{wishlistCount}</span>}
           </Link>
-          <Link to="/cart" className="nav-neo-btn">
+          <Link to="/cart" className="ajio-icon-circle">
             <i className="bi bi-bag"></i>
-            {cartCount > 0 && <span className="nav-neo-badge">{cartCount}</span>}
+            {cartCount > 0 && <span className="ajio-badge-count">{cartCount}</span>}
           </Link>
         </div>
-      </nav>
-      
-      {/* Category nav */}
-      <div style={{ background: 'var(--ink-2)', borderBottom: '2px solid var(--ink)', padding: '10px 48px', display: 'flex', gap: '24px', flexWrap: 'wrap', overflowX: 'auto' }}>
-        <Link to="/products" className={`category-link ${!searchParams.get('category') ? 'active' : ''}`}>All Products</Link>
-        <Link to="/products?category=electronics" className={`category-link ${searchParams.get('category') === 'electronics' ? 'active' : ''}`}>Electronics</Link>
-        <Link to="/products?category=fashion" className={`category-link ${searchParams.get('category') === 'fashion' ? 'active' : ''}`}>Fashion</Link>
-        <Link to="/products?category=home-living" className={`category-link ${searchParams.get('category') === 'home-living' ? 'active' : ''}`}>Home & Living</Link>
-        <Link to="/products?category=sports" className={`category-link ${searchParams.get('category') === 'sports' ? 'active' : ''}`}>Sports</Link>
-        <Link to="/products?category=beauty" className={`category-link ${searchParams.get('category') === 'beauty' ? 'active' : ''}`}>Beauty</Link>
-        <Link to="/products?category=books" className={`category-link ${searchParams.get('category') === 'books' ? 'active' : ''}`}>Books</Link>
       </div>
-    </>
+    </header>
   );
 };
 

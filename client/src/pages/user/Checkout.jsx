@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { placeOrderAPI } from '../../services/api';
+import { placeOrderAPI, validateCouponAPI } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const steps = ['Address', 'Payment', 'Confirm'];
@@ -16,12 +16,39 @@ const Checkout = () => {
   const [address, setAddress] = useState({ fullName: user?.name || '', phone: '', street: '', city: '', state: '', pincode: '' });
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '', name: '' });
+  const [couponCodeInput, setCouponCodeInput] = useState('');
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [discount, setDiscount] = useState(0);
 
   const items = cart.items || [];
   const subtotal = items.reduce((a, i) => a + i.price * i.quantity, 0);
+  
+  // Recalculate based on discount
+  let calculatedDiscount = 0;
+  if (appliedCoupon) {
+    if (appliedCoupon.discountType === 'percentage') {
+      calculatedDiscount = (subtotal * appliedCoupon.discountValue) / 100;
+    } else {
+      calculatedDiscount = appliedCoupon.discountValue;
+    }
+  }
+
   const shipping = subtotal > 499 ? 0 : 49;
-  const tax = parseFloat((subtotal * 0.05).toFixed(2));
-  const total = subtotal + shipping + tax;
+  const tax = parseFloat((0.05 * (subtotal - calculatedDiscount)).toFixed(2));
+  const total = subtotal - calculatedDiscount + shipping + tax;
+
+  const handleApplyCoupon = async () => {
+    if (!couponCodeInput.trim()) return;
+    try {
+      const { data } = await validateCouponAPI({ code: couponCodeInput });
+      setAppliedCoupon(data);
+      setDiscount(calculatedDiscount);
+      toast.success('Coupon applied!');
+    } catch (err) {
+      toast.error(err.response?.data?.message || 'Invalid coupon');
+      setAppliedCoupon(null);
+    }
+  };
 
   const handleAddressSubmit = (e) => { e.preventDefault(); setStep(1); };
   const handlePaymentSubmit = (e) => { e.preventDefault(); setStep(2); };
@@ -29,7 +56,11 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     setPlacing(true);
     try {
-      const { data } = await placeOrderAPI({ shippingAddress: address, paymentMethod });
+      const { data } = await placeOrderAPI({ 
+        shippingAddress: address, 
+        paymentMethod,
+        couponCode: appliedCoupon?.code
+      });
       await clearCart();
       toast.success('Order placed successfully! 🎉');
       navigate(`/orders/${data._id}`);
@@ -204,6 +235,19 @@ const Checkout = () => {
                 ))}
               </div>
               <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
+                <div className="d-flex justify-content-between mb-3">
+                  <div className="input-group">
+                    <input type="text" className="form-control-custom" placeholder="Coupon code" value={couponCodeInput} onChange={e => setCouponCodeInput(e.target.value)} disabled={!!appliedCoupon} style={{ borderRight: 'none', borderTopRightRadius: 0, borderBottomRightRadius: 0 }} />
+                    <button className="btn btn-outline-secondary" onClick={appliedCoupon ? () => { setAppliedCoupon(null); setCouponCodeInput(''); } : handleApplyCoupon} style={{ borderColor: 'var(--border)', color: appliedCoupon ? 'var(--danger)' : 'var(--text-primary)', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
+                      {appliedCoupon ? 'Remove' : 'Apply'}
+                    </button>
+                  </div>
+                </div>
+                {appliedCoupon && (
+                  <div className="d-flex justify-content-between mb-2" style={{ fontSize: '14px', color: 'var(--success)' }}>
+                    <span>Discount ({appliedCoupon.code})</span><span>-₹{calculatedDiscount.toLocaleString()}</span>
+                  </div>
+                )}
                 {[['Subtotal', `₹${subtotal.toLocaleString()}`], ['Shipping', shipping === 0 ? 'FREE' : `₹${shipping}`], ['Tax (5%)', `₹${tax}`]].map(([l, v]) => (
                   <div key={l} className="d-flex justify-content-between mb-2" style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
                     <span>{l}</span><span>{v}</span>

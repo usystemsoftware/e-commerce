@@ -1,5 +1,6 @@
 /* ===== SHOPZONE GLOBAL STYLES ===== */
-@import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
   --primary: #6c3ef4;
@@ -15,7 +16,7 @@
   --neon-yellow: #d1ff00;
   --neon-purple: #b026ff;
 
-  /* Light Theme Values */
+  /* Global Light Theme Values */
   --dark: #f8f9fa;
   --dark-2: #ffffff;
   --dark-3: #f1f3f5;
@@ -25,12 +26,25 @@
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
 
+  /* Premium Admin Light Theme Values */
+  --admin-bg: #f8fafc;
+  --admin-sidebar-bg: rgba(255, 255, 255, 0.85);
+  --admin-card-bg: rgba(255, 255, 255, 0.85);
+  --admin-border: rgba(0, 0, 0, 0.08);
+  --admin-border-hover: rgba(108, 62, 244, 0.3);
+  --admin-text: #0f172a;
+  --admin-text-secondary: #334155;
+  --admin-text-muted: #64748b;
+  
+  --admin-glass-blur: blur(24px);
+
   --gradient-primary: linear-gradient(135deg, var(--neon-purple) 0%, var(--primary) 100%);
   --gradient-secondary: linear-gradient(135deg, var(--neon-pink) 0%, var(--secondary) 100%);
   --gradient-hero: radial-gradient(circle at top, rgba(176, 38, 255, 0.08), transparent 60%), radial-gradient(circle at bottom right, rgba(0, 225, 255, 0.08), transparent 50%), var(--dark);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12): --shadow-neon: 0 0 15px rgba(176, 38, 255, 0.2);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12);
+  --shadow-neon: 0 0 15px rgba(176, 38, 255, 0.2);
   --radius: 16px;
   --radius-sm: 10px;
   --radius-lg: 24px;
@@ -44,11 +58,53 @@
 }
 
 body {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Calibri', sans-serif;
   background-color: var(--dark);
   color: var(--text-primary);
   line-height: 1.6;
   overflow-x: hidden;
+}
+
+/* ===== PREMIUM GLASSMORPHISM UTILITIES ===== */
+.glass-panel {
+  background: var(--admin-card-bg);
+  backdrop-filter: var(--admin-glass-blur);
+  -webkit-backdrop-filter: var(--admin-glass-blur);
+  border: 1px solid var(--admin-border);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+}
+
+.admin-theme {
+  background-color: var(--admin-bg);
+  color: var(--admin-text);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Background Glow Effect for Admin */
+.admin-theme::before {
+  content: '';
+  position: fixed;
+  top: -10%;
+  left: -5%;
+  width: 50vw;
+  height: 50vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(108, 62, 244, 0.05) 0%, rgba(0,0,0,0) 60%);
+  pointer-events: none;
+  z-index: 0;
+}
+.admin-theme::after {
+  content: '';
+  position: fixed;
+  bottom: -10%;
+  right: -5%;
+  width: 40vw;
+  height: 40vw;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(6, 182, 212, 0.05) 0%, rgba(0,0,0,0) 60%);
+  pointer-events: none;
+  z-index: 0;
 }
 
 /* Scrollbar */
@@ -521,8 +577,10 @@ a:hover {
 .admin-sidebar {
   width: 260px;
   min-height: 100vh;
-  background: var(--dark-2);
-  border-right: 1px solid var(--border);
+  background: var(--admin-sidebar-bg);
+  backdrop-filter: var(--admin-glass-blur);
+  -webkit-backdrop-filter: var(--admin-glass-blur);
+  border-right: 1px solid var(--admin-border);
   position: fixed;
   top: 0;
   left: 0;
@@ -533,40 +591,72 @@ a:hover {
 
 .admin-sidebar .sidebar-brand {
   padding: 24px 20px;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
   font-weight: 800;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--admin-border);
+  letter-spacing: -0.5px;
 }
 
 .admin-sidebar .nav-item a {
   display: flex;
   align-items: center;
   gap: 12px;
-  padding: 12px 20px;
-  color: var(--text-secondary);
+  padding: 14px 20px;
+  color: var(--admin-text-secondary);
   font-weight: 500;
   transition: var(--transition);
-  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
-  margin: 2px 10px 2px 0;
+  border-radius: var(--radius-sm);
+  margin: 6px 16px;
+  position: relative;
+  overflow: hidden;
+}
+
+.admin-sidebar .nav-item a::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  height: 100%;
+  width: 0;
+  background: var(--gradient-primary);
+  opacity: 0.1;
+  transition: var(--transition);
+  z-index: -1;
+}
+
+.admin-sidebar .nav-item a:hover::before,
+.admin-sidebar .nav-item a.active::before {
+  width: 100%;
+  opacity: 0.2;
 }
 
 .admin-sidebar .nav-item a:hover,
 .admin-sidebar .nav-item a.active {
-  color: var(--text-primary);
-  background: rgba(108, 62, 244, 0.15);
-  border-right: 3px solid var(--primary);
+  color: var(--admin-text);
+  border-left: 3px solid var(--primary-light);
+  transform: translateX(4px);
 }
 
 .admin-sidebar .nav-item a i {
   font-size: 18px;
   width: 22px;
   text-align: center;
+  color: var(--admin-text-muted);
+  transition: var(--transition);
+}
+
+.admin-sidebar .nav-item a:hover i,
+.admin-sidebar .nav-item a.active i {
+  color: var(--primary-light);
 }
 
 .admin-content {
   margin-left: 260px;
   min-height: 100vh;
   padding: 30px;
+  width: calc(100% - 260px);
+  position: relative;
+  z-index: 1;
 }
 
 /* ===== STAT CARDS ===== */
@@ -1339,8 +1429,6 @@ a:hover {
 /* =========================================================
    NEO-BRUTALIST SHOPZONE THEME
    ========================================================= */
-
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
   --ink: #0a0a0a;

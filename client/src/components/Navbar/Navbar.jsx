@@ -2,12 +2,14 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useSettings } from '../../context/SettingsContext';
 import { useState } from 'react';
 
 const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const { settings } = useSettings();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
@@ -26,7 +28,9 @@ const Navbar = () => {
   return (
     <>
       <nav className="nav-neo">
-        <Link to="/" className="nav-neo-logo">SHOP<span>ZONE</span></Link>
+        <Link to="/" className="nav-neo-logo">
+          {settings.logoUrl ? <img src={settings.logoUrl} alt={settings.storeName} style={{ height: '30px' }} /> : <span>{settings.storeName.toUpperCase()}</span>}
+        </Link>
         <form onSubmit={handleSearch} className="nav-neo-search" style={{ margin: 0 }}>
           <input 
             type="text" 

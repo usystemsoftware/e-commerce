@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { getFeaturedProductsAPI, getCategoriesAPI } from '../../services/api';
+import { getFeaturedProductsAPI, getCategoriesAPI, getActiveBannersAPI } from '../../services/api';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import Spinner from '../../components/Spinner/Spinner';
 
@@ -18,14 +18,17 @@ const Home = () => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [email, setEmail] = useState('');
+  const [banners, setBanners] = useState([]);
+  const [currentBanner, setCurrentBanner] = useState(0);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [featRes, catRes] = await Promise.all([getFeaturedProductsAPI(), getCategoriesAPI()]);
+        const [featRes, catRes, bannerRes] = await Promise.all([getFeaturedProductsAPI(), getCategoriesAPI(), getActiveBannersAPI()]);
         setFeatured(featRes.data);
         setCategories(catRes.data);
+        if (bannerRes.data?.length > 0) setBanners(bannerRes.data);
       } catch (err) { /* silent */ } finally { setLoading(false); }
     };
     fetchData();
@@ -36,6 +39,14 @@ const Home = () => {
     const q = e.target.elements.heroSearch?.value;
     if (q?.trim()) navigate(`/products?keyword=${q.trim()}`);
   };
+
+  useEffect(() => {
+    if (banners.length <= 1) return;
+    const interval = setInterval(() => {
+      setCurrentBanner(prev => (prev + 1) % banners.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, [banners.length]);
 
   return (
     <div className="home-neo">
@@ -53,44 +64,76 @@ const Home = () => {
         </div>
       </div>
 
-      {/* ── HERO ────────────────────────────── */}
-      <section className="hero-neo">
-        <div className="hero-neo-left">
-          <div className="hero-neo-eyebrow">v2.0 / The Future is now</div>
-          <h1 className="hero-neo-title">
-            <span className="outline">OWN</span> YOUR<br/>
-            <span className="hot-word">AESTHETIC</span>
-          </h1>
-          <p className="hero-neo-sub">
-            Curated gear for the next generation. No fluff, just pure hype. 
-            Level up your daily rotation with exclusive drops.
-          </p>
-          <form onSubmit={handleSearch} className="hero-neo-search">
-            <input 
-              type="text" 
-              name="heroSearch"
-              placeholder="SEARCH DRIP [e.g. sneakers, tech]..." 
-            />
-            <button type="submit" className="btn-acid" style={{ border: 'none', padding: '14px 24px' }}>ENTER</button>
-          </form>
-          <div className="hero-neo-stats">
-            <div>
-              <div className="hero-neo-stat-val">10<span>K</span>+</div>
-              <div className="hero-neo-stat-label">Hype Beasts</div>
+      {/* ── DYNAMIC HERO BANNERS ────────────────────────────── */}
+      {banners.length > 0 ? (
+        <section className="hero-neo" style={{ position: 'relative', overflow: 'hidden', display: 'block' }}>
+          {banners.map((banner, idx) => (
+            <div 
+              key={banner._id}
+              style={{
+                position: idx === currentBanner ? 'relative' : 'absolute',
+                top: 0, left: 0, width: '100%', height: '100%',
+                opacity: idx === currentBanner ? 1 : 0,
+                transition: 'opacity 0.8s ease-in-out',
+                display: 'grid',
+                gridTemplateColumns: '1fr 1fr',
+                zIndex: idx === currentBanner ? 1 : 0
+              }}
+            >
+              <div className="hero-neo-left" style={{ zIndex: 2 }}>
+                <div className="hero-neo-eyebrow">FEATURED</div>
+                <h1 className="hero-neo-title" style={{ fontSize: 'clamp(40px, 6vw, 80px)' }}>{banner.title.toUpperCase()}</h1>
+                {banner.linkUrl && (
+                  <Link to={banner.linkUrl} className="btn-acid mt-4 d-inline-flex" style={{ textDecoration: 'none' }}>
+                    SHOP NOW <i className="bi bi-arrow-right ms-2"></i>
+                  </Link>
+                )}
+              </div>
+              <div className="hero-neo-right">
+                <img src={banner.imageUrl.startsWith('http') ? banner.imageUrl : `http://localhost:5000${banner.imageUrl}`} className="hero-neo-img" alt={banner.title} />
+                <div className="hero-neo-img-overlay"></div>
+              </div>
             </div>
-            <div>
-              <div className="hero-neo-stat-val">500<span>+</span></div>
-              <div className="hero-neo-stat-label">Exclusive Drops</div>
+          ))}
+          {banners.length > 1 && (
+            <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
+              {banners.map((_, idx) => (
+                <button 
+                  key={idx} 
+                  onClick={() => setCurrentBanner(idx)}
+                  style={{ width: '12px', height: '12px', borderRadius: '50%', border: 'none', background: currentBanner === idx ? 'var(--acid)' : 'rgba(255,255,255,0.3)', cursor: 'pointer', transition: 'all 0.3s' }}
+                />
+              ))}
             </div>
+          )}
+        </section>
+      ) : (
+        <section className="hero-neo">
+          <div className="hero-neo-left">
+            <div className="hero-neo-eyebrow">v2.0 / The Future is now</div>
+            <h1 className="hero-neo-title">
+              <span className="outline">OWN</span> YOUR<br/>
+              <span className="hot-word">AESTHETIC</span>
+            </h1>
+            <p className="hero-neo-sub">
+              Curated gear for the next generation. No fluff, just pure hype. 
+              Level up your daily rotation with exclusive drops.
+            </p>
+            <form onSubmit={handleSearch} className="hero-neo-search">
+              <input 
+                type="text" 
+                name="heroSearch"
+                placeholder="SEARCH DRIP [e.g. sneakers, tech]..." 
+              />
+              <button type="submit" className="btn-acid" style={{ border: 'none', padding: '14px 24px' }}>ENTER</button>
+            </form>
           </div>
-        </div>
-        <div className="hero-neo-right">
-          <img src="https://images.unsplash.com/photo-1618354691438-25af04751473?q=80&w=1000&auto=format&fit=crop" className="hero-neo-img" alt="Hero" />
-          <div className="hero-neo-img-overlay"></div>
-          <div className="hero-neo-tag-float one">RESTOCK // RETRO HIGH</div>
-          <div className="hero-neo-tag-float two">LTD ED.</div>
-        </div>
-      </section>
+          <div className="hero-neo-right">
+            <img src="https://images.unsplash.com/photo-1618354691438-25af04751473?q=80&w=1000&auto=format&fit=crop" className="hero-neo-img" alt="Hero" />
+            <div className="hero-neo-img-overlay"></div>
+          </div>
+        </section>
+      )}
 
       {/* ── CATEGORIES ──────────────────────── */}
       <div className="categories-strip-neo">

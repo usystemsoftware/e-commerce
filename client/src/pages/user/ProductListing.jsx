@@ -27,10 +27,31 @@ const ProductListing = () => {
   useEffect(() => { getCategoriesAPI().then(r => setCategories(r.data)); }, []);
 
   useEffect(() => {
+    setFilters(f => ({
+      ...f,
+      keyword: searchParams.get('keyword') || '',
+      category: searchParams.get('category') || '',
+    }));
+    setPage(1);
+  }, [searchParams]);
+
+  useEffect(() => {
+    // If a category is selected but categories haven't loaded yet, wait.
+    if (filters.category && categories.length === 0) return;
+
     const fetchProducts = async () => {
       setLoading(true);
       try {
         const params = { ...filters, page };
+        
+        // Map slug to _id for backend compatibility
+        if (params.category) {
+          const cat = categories.find(c => c.slug === params.category || c._id === params.category);
+          if (cat) {
+            params.category = cat._id;
+          }
+        }
+
         Object.keys(params).forEach(k => !params[k] && delete params[k]);
         const { data } = await getProductsAPI(params);
         setProducts(data.products);
@@ -39,7 +60,7 @@ const ProductListing = () => {
       } catch (err) { /* silent */ } finally { setLoading(false); }
     };
     fetchProducts();
-  }, [filters, page]);
+  }, [filters, page, categories]);
 
   const handleFilterChange = (key, value) => {
     setFilters(f => ({ ...f, [key]: value }));
@@ -56,7 +77,11 @@ const ProductListing = () => {
       <div className="page-header">
         <div className="container">
           <h1>
-            {filters.keyword ? `Results for "${filters.keyword}"` : 'All Products'}
+            {filters.keyword 
+              ? `Results for "${filters.keyword}"` 
+              : filters.category 
+                ? (categories.find(c => c._id === filters.category || c.slug === filters.category)?.name || 'Products')
+                : 'All Products'}
           </h1>
           <p>{total} products found</p>
         </div>
@@ -80,7 +105,7 @@ const ProductListing = () => {
                 </label>
                 {categories.map(cat => (
                   <label key={cat._id} style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', color: 'var(--text-secondary)', fontSize: '14px' }}>
-                    <input type="radio" name="category" checked={filters.category === cat._id} onChange={() => handleFilterChange('category', cat._id)} />
+                    <input type="radio" name="category" checked={filters.category === cat._id || filters.category === cat.slug} onChange={() => handleFilterChange('category', cat.slug)} />
                     {cat.name}
                   </label>
                 ))}

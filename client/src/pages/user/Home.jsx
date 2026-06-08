@@ -68,7 +68,7 @@ const Home = () => {
       {banners.length > 0 ? (
         <section className="hero-neo" style={{ position: 'relative', overflow: 'hidden', display: 'block' }}>
           {banners.map((banner, idx) => (
-            <div 
+            <div
               key={banner._id}
               style={{
                 position: idx === currentBanner ? 'relative' : 'absolute',
@@ -98,8 +98,8 @@ const Home = () => {
           {banners.length > 1 && (
             <div style={{ position: 'absolute', bottom: '20px', left: '50%', transform: 'translateX(-50%)', display: 'flex', gap: '8px', zIndex: 10 }}>
               {banners.map((_, idx) => (
-                <button 
-                  key={idx} 
+                <button
+                  key={idx}
                   onClick={() => setCurrentBanner(idx)}
                   style={{ width: '12px', height: '12px', borderRadius: '50%', border: 'none', background: currentBanner === idx ? 'var(--acid)' : 'rgba(255,255,255,0.3)', cursor: 'pointer', transition: 'all 0.3s' }}
                 />
@@ -112,18 +112,18 @@ const Home = () => {
           <div className="hero-neo-left">
             <div className="hero-neo-eyebrow">v2.0 / The Future is now</div>
             <h1 className="hero-neo-title">
-              <span className="outline">OWN</span> YOUR<br/>
+              <span className="outline">OWN</span> YOUR<br />
               <span className="hot-word">AESTHETIC</span>
             </h1>
             <p className="hero-neo-sub">
-              Curated gear for the next generation. No fluff, just pure hype. 
+              Curated gear for the next generation. No fluff, just pure hype.
               Level up your daily rotation with exclusive drops.
             </p>
             <form onSubmit={handleSearch} className="hero-neo-search">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 name="heroSearch"
-                placeholder="SEARCH DRIP [e.g. sneakers, tech]..." 
+                placeholder="SEARCH DRIP [e.g. sneakers, tech]..."
               />
               <button type="submit" className="btn-acid" style={{ border: 'none', padding: '14px 24px' }}>ENTER</button>
             </form>

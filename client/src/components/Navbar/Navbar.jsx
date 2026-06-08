@@ -77,23 +77,9 @@ const Navbar = () => {
   const singleCategories = ['electronics', 'fashion', 'home-living', 'sports', 'beauty', 'books'];
 
   return (
-    <>
-      <nav className="nav-neo">
-        <Link to="/" className="nav-neo-logo">
-          {settings.logoUrl ? <img src={settings.logoUrl} alt={settings.storeName} style={{ height: '30px' }} /> : <span>{settings.storeName.toUpperCase()}</span>}
-        </Link>
-        <form onSubmit={handleSearch} className="nav-neo-search" style={{ margin: 0 }}>
-          <input 
-            type="text" 
-            placeholder="SEARCH [e.g. tees, hoodies]..." 
-            value={keyword}
-            onChange={e => setKeyword(e.target.value)}
-          />
-          <button type="submit" style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer' }}>
-            <i className="bi bi-search"></i>
-          </button>
-        </form>
-        <div className="nav-neo-actions">
+    <header className="ajio-navbar-wrapper">
+      <div className="ajio-topbar">
+        <div className="ajio-topbar-links">
           {user ? (
             <div className="dropdown">
               <span className="ajio-topbar-link" data-bs-toggle="dropdown" style={{ cursor: 'pointer' }}>
@@ -113,7 +99,7 @@ const Navbar = () => {
             <Link to="/login" className="ajio-topbar-link">SIGN IN /</Link>
           )}
         </div>
-      </nav>
+      </div>
 
       <div className="ajio-mainbar">
         <Link to="/" className="ajio-brand">SHOP<span>ZONE</span></Link>
@@ -127,8 +113,8 @@ const Navbar = () => {
                 <div className="mega-menu-sidebar-title">Categories for you</div>
                 <ul>
                   {Object.keys(categoryLabels).map((key) => (
-                    <li 
-                      key={key} 
+                    <li
+                      key={key}
                       className={activeMegaCategory === key ? 'active' : ''}
                       onMouseEnter={() => setActiveMegaCategory(key)}
                     >
@@ -158,7 +144,7 @@ const Navbar = () => {
               </div>
             </div>
           </div>
-          
+
           {singleCategories.map(cat => (
             <div key={cat} className="ajio-nav-item mega-menu-wrapper">
               <Link to={`/products?category=${cat}`} className={`ajio-nav-link ${searchParams.get('category') === cat ? 'active' : ''}`}>
@@ -182,12 +168,12 @@ const Navbar = () => {
           ))}
 
         </nav>
-        
+
         <div className="ajio-tools">
           <form onSubmit={handleSearch} className="ajio-search-box">
-            <input 
-              type="text" 
-              placeholder="SEARCH [e.g. tees, hoodies]..." 
+            <input
+              type="text"
+              placeholder="SEARCH [e.g. tees, hoodies]..."
               value={keyword}
               onChange={e => setKeyword(e.target.value)}
             />
@@ -205,7 +191,7 @@ const Navbar = () => {
           </Link>
         </div>
       </div>
-    </>
+    </header>
   );
 };
 

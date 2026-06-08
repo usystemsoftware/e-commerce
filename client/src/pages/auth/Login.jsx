@@ -20,7 +20,11 @@ const Login = () => {
       const { data } = await loginAPI(form);
       login(data);
       toast.success(`Welcome back, ${data.name}! 👋`);
-      navigate(redirect);
+      if (data.role === 'admin') {
+        navigate('/admin/dashboard');
+      } else {
+        navigate(redirect);
+      }
     } catch (err) {
       toast.error(err.response?.data?.message || 'Login failed');
     } finally { setLoading(false); }

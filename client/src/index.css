@@ -1258,440 +1258,250 @@ a:hover {
   }
 }
 
-/* ===== NEO-BRUTALISM STYLES ===== */
-.home-neo {
-  background-color: #f4f4f0;
-  color: #111;
-  font-family: 'Outfit', sans-serif;
+/* ===== FLIPKART STYLE HOMEPAGE ===== */
+.fk-home-bg {
+  background-color: #f1f3f6;
+  color: #212121;
+  font-family: Roboto, Arial, sans-serif;
+  min-height: 100vh;
+  padding-bottom: 20px;
 }
 
-/* Ticker */
-.ticker {
-  background: #ccff00;
-  color: #000;
-  padding: 10px 0;
-  border-bottom: 2px solid #000;
-  overflow: hidden;
-  white-space: nowrap;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.ticker-track {
+/* Categories Strip */
+.fk-categories-strip {
+  background-color: #fff;
+  padding: 12px 24px;
   display: flex;
-  width: max-content;
-  animation: ticker-scroll 15s linear infinite;
-}
-
-@keyframes ticker-scroll {
-  0% {
-    transform: translateX(0);
-  }
-
-  100% {
-    transform: translateX(-50%);
-  }
-}
-
-.ticker-item {
-  padding: 0 2rem;
-  display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-}
-
-.ticker-dot {
-  width: 8px;
-  height: 8px;
-  background: #000;
-  border-radius: 50%;
-}
-
-/* Hero */
-.hero-neo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  min-height: 80vh;
-  border-bottom: 2px solid #000;
-}
-
-.hero-neo-left {
-  padding: 4rem;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  border-right: 2px solid #000;
-  background: #fff;
-}
-
-.hero-neo-eyebrow {
-  font-weight: 700;
-  text-transform: uppercase;
-  margin-bottom: 1rem;
-  font-size: 0.9rem;
-  letter-spacing: 2px;
-}
-
-.hero-neo-title {
-  font-size: clamp(3rem, 6vw, 5rem);
-  font-weight: 800;
-  line-height: 1;
-  margin-bottom: 1.5rem;
-  text-transform: uppercase;
-}
-
-.hero-neo-title .outline {
-  color: transparent;
-  -webkit-text-stroke: 2px #000;
-}
-
-.hero-neo-title .hot-word {
-  background: #ff0055;
-  color: #fff;
-  padding: 0 10px;
-  display: inline-block;
-  transform: skewX(-10deg);
-}
-
-.hero-neo-sub {
-  font-size: 1.2rem;
-  font-weight: 500;
-  margin-bottom: 2rem;
-  max-width: 500px;
-}
-
-.hero-neo-search {
-  display: flex;
-  border: 2px solid #000;
-  box-shadow: 4px 4px 0 #000;
-  background: #fff;
-  margin-bottom: 3rem;
-  max-width: 500px;
-}
-
-.hero-neo-search input {
-  flex: 1;
-  padding: 1rem;
-  border: none;
-  outline: none;
-  font-weight: 600;
-  font-family: inherit;
-  font-size: 1rem;
-  color: #000;
-}
-
-.btn-acid {
-  background: #ccff00;
-  color: #000;
-  font-weight: 800;
-  text-transform: uppercase;
-  cursor: pointer;
-  border-left: 2px solid #000;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  transition: all 0.2s;
-}
-
-.btn-acid:hover {
-  background: #000;
-  color: #ccff00;
-}
-
-.hero-neo-stats {
-  display: flex;
-  gap: 3rem;
-}
-
-.hero-neo-stat-val {
-  font-size: 2.5rem;
-  font-weight: 800;
-  line-height: 1;
-}
-
-.hero-neo-stat-val span {
-  color: #ff0055;
-}
-
-.hero-neo-stat-label {
-  font-weight: 700;
-  text-transform: uppercase;
-  font-size: 0.8rem;
-  letter-spacing: 1px;
-}
-
-.hero-neo-right {
-  position: relative;
-  background: #f4f4f0;
-  overflow: hidden;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-:root {
-  --ink: #0a0a0a;
-  --ink-2: #1a1a1a;
-  --ink-3: #2e2e2e;
-  --chalk: #f5f3ee;
-  --chalk-2: #eceae4;
-  --chalk-3: #e0ddd6;
-  --acid: #c8ff00;
-  --acid-dim: #a3d600;
-  --hot: #ff3c5a;
-  --sky: #00c2ff;
-  --gold: #ffb800;
-  --muted: #888070;
-  --font-display: 'Bebas Neue', sans-serif;
-  --font-body: 'Space Grotesk', sans-serif;
-  --font-mono: 'DM Mono', monospace;
-  --ease: cubic-bezier(0.25, 0.46, 0.45, 0.94);
-  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
-
-.hero-neo-tag-float {
-  position: absolute;
-  background: #fff;
-  border: 2px solid #000;
-  padding: 0.5rem 1rem;
-  font-weight: 800;
-  box-shadow: 4px 4px 0 #000;
-  z-index: 3;
-}
-
-.hero-neo-tag-float.one {
-  top: 20%;
-  right: 5%;
-  transform: rotate(5deg);
-}
-
-.hero-neo-tag-float.two {
-  bottom: 15%;
-  left: 5%;
-  background: #ff0055;
-  color: #fff;
-  transform: rotate(-10deg);
-}
-
-/* Categories */
-.categories-strip-neo {
-  display: flex;
-  align-items: center;
-  border-bottom: 2px solid #000;
-  background: #fff;
-  padding: 1rem 2rem;
-  gap: 1.5rem;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.16);
+  margin-bottom: 10px;
   overflow-x: auto;
 }
 
-.cats-neo-label {
-  font-weight: 800;
-  white-space: nowrap;
-}
-
-.cat-neo-chip {
-  border: 2px solid #000;
-  padding: 0.5rem 1rem;
-  border-radius: 50px;
-  font-weight: 700;
-  color: #000;
-  text-decoration: none;
-  white-space: nowrap;
+.fk-cat-item {
   display: flex;
+  flex-direction: column;
   align-items: center;
   gap: 8px;
-  transition: all 0.2s;
+  cursor: pointer;
+  text-decoration: none;
+  min-width: 80px;
+}
+
+.fk-cat-icon {
+  width: 64px;
+  height: 64px;
+  object-fit: contain;
+}
+
+.fk-cat-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: #212121;
+}
+
+.fk-cat-item:hover .fk-cat-text {
+  color: #2874f0;
+}
+
+/* Carousel */
+.fk-carousel-section {
+  padding: 0 10px;
+  margin-bottom: 10px;
+}
+
+.fk-carousel-container {
   background: #fff;
-  box-shadow: 2px 2px 0 #000;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.16);
 }
 
-.cat-neo-chip:hover {
-  background: #ccff00;
-  transform: translate(-2px, -2px);
-  box-shadow: 4px 4px 0 #000;
+.fk-carousel-image {
+  width: 100%;
+  height: 280px;
+  object-fit: cover;
+  display: block;
 }
 
-.cat-neo-chip-icon {
-  font-size: 1.2rem;
+/* Promo Banners */
+.fk-promo-strip {
+  padding: 0 10px;
+  margin-bottom: 10px;
 }
 
-/* Sections */
-.section-neo {
-  padding: 5rem 0;
-  border-bottom: 2px solid #000;
+.fk-promo-container {
+  background: #fff;
+  display: flex;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.16);
+  padding: 10px;
+  justify-content: center;
 }
 
-.container-neo {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 0 2rem;
+.fk-promo-image {
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 }
 
-.section-neo-head {
+/* Product Section */
+.fk-section {
+  margin: 0 10px 10px;
+  background: #fff;
+  box-shadow: 0 1px 1px 0 rgba(0,0,0,.16);
+}
+
+.fk-section-header {
+  padding: 15px 20px;
   display: flex;
   justify-content: space-between;
-  align-items: flex-end;
-  margin-bottom: 3rem;
-  border-bottom: 2px solid #000;
-  padding-bottom: 1rem;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.section-neo-title {
-  font-size: 2.5rem;
-  font-weight: 800;
-  text-transform: uppercase;
+.fk-section-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: #000;
   margin: 0;
 }
 
-.section-neo-title .num {
-  color: #ff0055;
-  font-size: 1.5rem;
-  vertical-align: top;
-}
-
-.section-neo-link {
-  font-weight: 800;
-  color: #000;
+.fk-btn-view-all {
+  background-color: #2874f0;
+  color: #fff;
+  border: none;
+  border-radius: 2px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
   text-decoration: none;
-  text-transform: uppercase;
+  box-shadow: 0 2px 4px 0 rgba(0,0,0,.2);
+}
+
+.fk-section-content {
+  padding: 15px;
   display: flex;
-  align-items: center;
-  gap: 5px;
+  gap: 15px;
+  overflow-x: auto;
+  background-color: #fff;
 }
 
-.section-neo-link:hover {
-  text-decoration: underline;
+/* Specific Section Backgrounds */
+.fk-section.suggested {
+  background-color: #fff;
+}
+.fk-section.suggested .fk-section-content {
+  background-image: url('https://rukminim1.flixcart.com/fk-p-flap/278/278/image/7593e7b6d406131e.jpg?q=90');
+  background-repeat: no-repeat;
+  background-position: bottom;
+  background-size: cover;
 }
 
-/* Grid */
-.grid-neo-4-padded {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 2rem;
+.fk-section.brands {
+  background-color: #fff;
+}
+.fk-section.brands .fk-section-content {
+  background-color: #f1f3f6;
 }
 
-/* Features Strip */
-.features-neo-strip {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  border-bottom: 2px solid #000;
-}
-
-.feature-neo-item {
-  padding: 3rem 2rem;
-  display: flex;
-  align-items: center;
-  gap: 1.5rem;
-  border-right: 2px solid #000;
+/* Product Card */
+.fk-product-card {
+  min-width: 200px;
+  max-width: 220px;
   background: #fff;
+  border: 1px solid #e0e0e0;
+  border-radius: 4px;
+  padding: 15px;
+  text-align: center;
+  text-decoration: none;
+  transition: box-shadow 0.2s ease-in-out;
+  display: flex;
+  flex-direction: column;
 }
 
-.feature-neo-item:last-child {
-  border-right: none;
+.fk-product-card:hover {
+  box-shadow: 0 3px 16px 0 rgba(0,0,0,.11);
 }
 
-.feature-neo-icon {
-  width: 60px;
-  height: 60px;
-  background: #ccff00;
-  border: 2px solid #000;
-  box-shadow: 4px 4px 0 #000;
+.fk-product-image-wrap {
+  height: 150px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
-  flex-shrink: 0;
+  margin-bottom: 15px;
 }
 
-.feature-neo-title {
-  font-weight: 800;
-  text-transform: uppercase;
-  font-size: 1.2rem;
-  margin-bottom: 0.2rem;
+.fk-product-image {
+  max-height: 100%;
+  max-width: 100%;
+  object-fit: contain;
 }
 
-.feature-neo-desc {
+.fk-product-title {
+  font-size: 14px;
   font-weight: 500;
-  font-size: 0.9rem;
+  color: #212121;
+  margin-bottom: 5px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-/* Newsletter */
-.newsletter-neo {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  background: #111;
-  color: #fff;
-  border-bottom: 2px solid #000;
-  padding: 5rem 4rem;
+.fk-product-rating {
+  display: inline-flex;
   align-items: center;
-  gap: 4rem;
-}
-
-.newsletter-neo-title {
-  font-size: 3rem;
-  font-weight: 800;
-  text-transform: uppercase;
-  line-height: 1.1;
-  margin-bottom: 1rem;
-}
-
-.newsletter-neo-title .accent {
-  color: #ccff00;
-}
-
-.newsletter-neo-sub {
-  font-size: 1.1rem;
-  color: #ccc;
+  background-color: #388e3c;
+  color: #fff;
+  font-size: 12px;
   font-weight: 500;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-bottom: 8px;
+  align-self: center;
 }
 
-.newsletter-neo-form {
+.fk-product-rating i {
+  font-size: 10px;
+  margin-left: 2px;
+}
+
+.fk-product-price-row {
   display: flex;
-  border: 2px solid #ccff00;
-  background: #fff;
-  box-shadow: 8px 8px 0 #ccff00;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
 }
 
-.newsletter-neo-input {
-  flex: 1;
-  padding: 1.5rem;
-  border: none;
-  background: transparent;
-  outline: none;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 1.1rem;
-  color: #000;
+.fk-product-price {
+  font-size: 16px;
+  font-weight: 500;
+  color: #212121;
 }
 
-@media (max-width: 992px) {
-  .hero-neo {
-    grid-template-columns: 1fr;
-  }
+.fk-product-old-price {
+  font-size: 14px;
+  color: #878787;
+  text-decoration: line-through;
+}
 
-  .hero-neo-left {
-    border-right: none;
-    border-bottom: 2px solid #000;
-  }
+.fk-product-discount {
+  font-size: 13px;
+  font-weight: 500;
+  color: #388e3c;
+}
 
-  .hero-neo-right {
-    padding: 4rem 2rem;
+@media (max-width: 768px) {
+  .fk-categories-strip {
+    padding: 10px;
+    gap: 15px;
   }
-
-  .features-neo-strip {
-    grid-template-columns: 1fr;
+  .fk-carousel-image {
+    height: 150px;
   }
-
-  .feature-neo-item {
-    border-right: none;
-    border-bottom: 2px solid #000;
-  }
-
-  .newsletter-neo {
-    grid-template-columns: 1fr;
-    padding: 3rem 2rem;
-    gap: 2rem;
+  .fk-section-title {
+    font-size: 18px;
   }
 }
 

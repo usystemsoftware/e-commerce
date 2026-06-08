@@ -11,7 +11,23 @@ const getProducts = asyncHandler(async (req, res) => {
     ? { name: { $regex: req.query.keyword, $options: 'i' } }
     : {};
 
-  const categoryFilter = req.query.category ? { category: req.query.category } : {};
+  const mongoose = require('mongoose');
+  const Category = require('../models/Category');
+  let categoryFilter = {};
+  if (req.query.category) {
+    if (mongoose.isValidObjectId(req.query.category)) {
+      categoryFilter = { category: req.query.category };
+    } else {
+      const cat = await Category.findOne({ slug: req.query.category });
+      if (cat) {
+        categoryFilter = { category: cat._id };
+      } else {
+        // If category slug not found, ensure no products match
+        categoryFilter = { category: new mongoose.Types.ObjectId() };
+      }
+    }
+  }
+
   const brandFilter = req.query.brand ? { brand: { $regex: req.query.brand, $options: 'i' } } : {};
 
   const priceFilter =

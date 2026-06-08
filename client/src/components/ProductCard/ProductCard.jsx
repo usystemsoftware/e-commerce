@@ -11,64 +11,60 @@ const ProductCard = ({ product }) => {
   const discountPercent = product.discountPercent || (product.discountPrice > 0
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100) : 0);
 
-  const renderStars = (rating) => {
-    const full = Math.floor(rating);
-    const half = rating % 1 >= 0.5;
-    return [...Array(5)].map((_, i) => (
-      <i key={i} className={`bi bi-star${i < full ? '-fill' : (half && i === full ? '-half' : '')}`} style={{ color: '#fbbf24', fontSize: '13px' }}></i>
-    ));
-  };
+  const stars = "★".repeat(Math.floor(product.ratings || 0)) + ((product.ratings || 0) % 1 >= 0.5 ? "½" : "") + "☆".repeat(5 - Math.ceil(product.ratings || 0));
 
   return (
-    <div className="product-card">
-      {discountPercent > 0 && (
-        <div className="product-discount-badge">{discountPercent}% OFF</div>
-      )}
-      <div className="product-img-wrapper">
+    <div className="product-card-neo">
+      <div className="product-neo-img-wrap">
         <Link to={`/products/${product._id}`}>
           <img
             src={product.images?.[0] ? product.images[0] : `https://picsum.photos/seed/${product._id}/400/300`}
             alt={product.name}
+            loading="lazy"
           />
         </Link>
-        <div className="product-overlay">
-          <button
-            className="product-overlay-btn"
+        {discountPercent > 0 && <span className="discount-neo-tag">-{discountPercent}%</span>}
+        {product.isFeatured && <span className="new-neo-tag">HOT</span>}
+        <div className="product-neo-actions">
+          <button 
+            className="product-neo-action-btn" 
+            onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)} 
             title={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
-            onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
           >
-            <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? 'var(--danger)' : undefined }}></i>
+            <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? 'var(--hot)' : undefined }}></i>
           </button>
-          <Link to={`/products/${product._id}`} className="product-overlay-btn" title="Quick View">
+          <Link to={`/products/${product._id}`} className="product-neo-action-btn" title="Quick view">
             <i className="bi bi-eye"></i>
           </Link>
+          <button 
+            className="product-neo-action-btn" 
+            onClick={() => addToCart(product._id, 1)} 
+            disabled={product.stock === 0}
+            title="Add to cart"
+          >
+            <i className="bi bi-cart-plus"></i>
+          </button>
         </div>
       </div>
-      <div className="product-body">
-        <div className="product-brand">{product.brand}</div>
+      <div className="product-neo-body">
+        <div className="product-neo-brand">{product.brand}</div>
         <Link to={`/products/${product._id}`} className="text-decoration-none">
-          <div className="product-name">{product.name}</div>
+          <div className="product-neo-name">{product.name}</div>
         </Link>
-        <div className="product-rating">
-          <div className="stars">{renderStars(product.ratings || 0)}</div>
-          <span className="rating-count">({product.numReviews || 0})</span>
+        <div className="product-neo-rating">
+          <span className="stars-neo">{stars.slice(0,5)}</span>
+          <span className="rating-neo-num">{product.ratings || 0} ({(product.numReviews || 0).toLocaleString()})</span>
         </div>
-        <div className="product-price">
-          <span className="price-current">₹{currentPrice.toLocaleString()}</span>
-          {product.discountPrice > 0 && (
-            <span className="price-original">₹{product.price.toLocaleString()}</span>
-          )}
+        <div className="product-neo-price">
+          <span className="price-neo-now">₹{currentPrice.toLocaleString()}</span>
+          {product.discountPrice > 0 && <span className="price-neo-was">₹{product.price.toLocaleString()}</span>}
         </div>
-        <button
-          className="add-to-cart-btn"
+        <button 
+          className="add-neo-btn" 
           onClick={() => addToCart(product._id, 1)}
           disabled={product.stock === 0}
         >
-          {product.stock === 0 ? (
-            <><i className="bi bi-x-circle"></i> Out of Stock</>
-          ) : (
-            <><i className="bi bi-bag-plus"></i> Add to Cart</>
-          )}
+          {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'} <i className="bi bi-plus-lg" style={{ fontSize: 14 }}></i>
         </button>
       </div>
     </div>

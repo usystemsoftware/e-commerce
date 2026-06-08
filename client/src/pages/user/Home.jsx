@@ -145,7 +145,7 @@ const Home = () => {
         <div className="container">
           <div className="row g-4">
             <div className="col-md-6">
-              <div style={{ background: 'linear-gradient(135deg, #1a0a3e, #2d1060)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '40px', position: 'relative', overflow: 'hidden', minHeight: '200px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #e3f2fd, #bbdefb)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '40px', position: 'relative', overflow: 'hidden', minHeight: '200px' }}>
                 <div style={{ position: 'absolute', right: '-20px', top: '-20px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(108,62,244,0.3), transparent)', borderRadius: '50%' }}></div>
                 <span className="badge-warning mb-3 d-inline-block">Limited Time</span>
                 <h3 style={{ fontWeight: 800, marginBottom: '10px' }}>Electronics Sale</h3>
@@ -154,7 +154,7 @@ const Home = () => {
               </div>
             </div>
             <div className="col-md-6">
-              <div style={{ background: 'linear-gradient(135deg, #1a0f05, #3d1a05)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '40px', position: 'relative', overflow: 'hidden', minHeight: '200px' }}>
+              <div style={{ background: 'linear-gradient(135deg, #fff3e0, #ffe0b2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '40px', position: 'relative', overflow: 'hidden', minHeight: '200px' }}>
                 <div style={{ position: 'absolute', right: '-20px', top: '-20px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(249,115,22,0.3), transparent)', borderRadius: '50%' }}></div>
                 <span className="badge-secondary mb-3 d-inline-block">New Arrivals</span>
                 <h3 style={{ fontWeight: 800, marginBottom: '10px' }}>Fashion Picks</h3>

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { getPagesAPI } from '../../services/api';
+import { FiFacebook, FiTwitter, FiInstagram, FiYoutube } from 'react-icons/fi';
 
 const Footer = () => {
   const [pages, setPages] = useState([]);
@@ -10,59 +11,68 @@ const Footer = () => {
   }, []);
 
   return (
-    <footer className="footer-neo">
-      <div className="footer-neo-grid">
-        <div>
-          <Link to="/" className="footer-neo-logo text-decoration-none">SHOP<span>ZONE</span></Link>
-          <p className="footer-neo-desc">We don't just follow trends. We make them. Welcome to the new era of online streetwear & tech.</p>
-          <div className="footer-neo-social">
-            <button className="social-neo-btn"><i className="bi bi-twitter-x"></i></button>
-            <button className="social-neo-btn"><i className="bi bi-instagram"></i></button>
-            <button className="social-neo-btn"><i className="bi bi-youtube"></i></button>
-            <button className="social-neo-btn"><i className="bi bi-tiktok"></i></button>
+    <footer className="mp-footer">
+      <div className="mp-footer-grid">
+        <div className="mp-footer-col">
+          <h4>About Us</h4>
+          <Link to="/about">Contact Us</Link>
+          <Link to="/about">About Us</Link>
+          <Link to="/careers">Careers</Link>
+          <Link to="/stories">ShopZone Stories</Link>
+          <Link to="/press">Press</Link>
+          <Link to="/wholesale">Wholesale</Link>
+          <Link to="/corporate">Corporate Information</Link>
+        </div>
+
+        <div className="mp-footer-col">
+          <h4>Help Center</h4>
+          <Link to="/payments">Payments</Link>
+          <Link to="/shipping">Shipping</Link>
+          <Link to="/cancellation">Cancellation & Returns</Link>
+          <Link to="/faq">FAQ</Link>
+          <Link to="/report">Report Infringement</Link>
+        </div>
+
+        <div className="mp-footer-col">
+          <h4>Consumer Policy</h4>
+          {pages.length > 0 ? (
+            pages.map(page => (
+              <Link key={page._id} to={`/page/${page.slug}`}>{page.title}</Link>
+            ))
+          ) : (
+            <>
+              <Link to="/terms">Terms Of Use</Link>
+              <Link to="/security">Security</Link>
+              <Link to="/privacy">Privacy</Link>
+              <Link to="/sitemap">Sitemap</Link>
+              <Link to="/grievance">Grievance Redressal</Link>
+            </>
+          )}
+        </div>
+
+        <div className="mp-footer-col">
+          <h4>Social Media</h4>
+          <div style={{ display: 'flex', gap: '15px', marginTop: '10px' }}>
+            <a href="https://facebook.com" target="_blank" rel="noreferrer" style={{ color: '#fff', fontSize: '20px' }}><FiFacebook /></a>
+            <a href="https://twitter.com" target="_blank" rel="noreferrer" style={{ color: '#fff', fontSize: '20px' }}><FiTwitter /></a>
+            <a href="https://instagram.com" target="_blank" rel="noreferrer" style={{ color: '#fff', fontSize: '20px' }}><FiInstagram /></a>
+            <a href="https://youtube.com" target="_blank" rel="noreferrer" style={{ color: '#fff', fontSize: '20px' }}><FiYoutube /></a>
+          </div>
+          <div style={{ marginTop: '20px' }}>
+            <h4>Registered Office Address:</h4>
+            <p style={{ fontSize: '12px', color: '#878787', lineHeight: '1.5', margin: 0 }}>
+              ShopZone Internet Private Limited, <br/>
+              Buildings Alyssa, Begonia & <br/>
+              Clove Embassy Tech Village, <br/>
+              Outer Ring Road, Devarabeesanahalli Village, <br/>
+              Bengaluru, 560103, <br/>
+              Karnataka, India
+            </p>
           </div>
         </div>
-        <div>
-          <div className="footer-neo-col-title">SHOP</div>
-          <ul className="footer-neo-links">
-            <li><Link to="/products">ALL PRODUCTS</Link></li>
-            <li><Link to="/products?category=electronics">ELECTRONICS</Link></li>
-            <li><Link to="/products?category=fashion">FASHION</Link></li>
-            <li><Link to="/products?category=beauty">BEAUTY</Link></li>
-          </ul>
-        </div>
-        <div>
-          <div className="footer-neo-col-title">SUPPORT</div>
-          <ul className="footer-neo-links">
-            <li><Link to="/orders">ORDER STATUS</Link></li>
-            <li><Link to="/profile">MY ACCOUNT</Link></li>
-            <li><Link to="/cart">CART</Link></li>
-            <li><Link to="/contact">CONTACT US</Link></li>
-          </ul>
-        </div>
-        <div>
-          <div className="footer-neo-col-title">PAGES</div>
-          <ul className="footer-neo-links">
-            {pages.length > 0 ? (
-              pages.map(page => (
-                <li key={page._id}><Link to={`/page/${page.slug}`}>{page.title.toUpperCase()}</Link></li>
-              ))
-            ) : (
-              <>
-                <li><Link to="#">TERMS & CONDITIONS</Link></li>
-                <li><Link to="#">PRIVACY POLICY</Link></li>
-                <li><Link to="#">COOKIE POLICY</Link></li>
-              </>
-            )}
-          </ul>
-        </div>
       </div>
-      <div className="footer-neo-bottom">
-        <div className="footer-neo-copy">© {new Date().getFullYear()} SHOPZONE. ALL RIGHTS RESERVED.</div>
-        <div className="footer-neo-trust">
-          <div className="trust-neo-badge"><i className="bi bi-shield-check" style={{ fontSize: '14px', color: 'var(--acid)' }}></i> SECURE CHECKOUT</div>
-          <div className="trust-neo-badge"><i className="bi bi-globe" style={{ fontSize: '14px', color: 'var(--acid)' }}></i> WORLDWIDE SHIPPING</div>
-        </div>
+      <div className="mp-footer-bottom">
+        <p style={{ margin: 0 }}>&copy; {new Date().getFullYear()} ShopZone.com. All Rights Reserved.</p>
       </div>
     </footer>
   );

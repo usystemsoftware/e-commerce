@@ -2,6 +2,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useSettings } from '../../context/SettingsContext';
 import { useState } from 'react';
 
 const megaMenuData = {
@@ -57,6 +58,7 @@ const Navbar = () => {
   const { user, logout } = useAuth();
   const { cartCount } = useCart();
   const { wishlistCount } = useWishlist();
+  const { settings } = useSettings();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
@@ -75,9 +77,23 @@ const Navbar = () => {
   const singleCategories = ['electronics', 'fashion', 'home-living', 'sports', 'beauty', 'books'];
 
   return (
-    <header className="ajio-navbar-wrapper">
-      <div className="ajio-topbar">
-        <div className="ajio-topbar-links">
+    <>
+      <nav className="nav-neo">
+        <Link to="/" className="nav-neo-logo">
+          {settings.logoUrl ? <img src={settings.logoUrl} alt={settings.storeName} style={{ height: '30px' }} /> : <span>{settings.storeName.toUpperCase()}</span>}
+        </Link>
+        <form onSubmit={handleSearch} className="nav-neo-search" style={{ margin: 0 }}>
+          <input 
+            type="text" 
+            placeholder="SEARCH [e.g. tees, hoodies]..." 
+            value={keyword}
+            onChange={e => setKeyword(e.target.value)}
+          />
+          <button type="submit" style={{ background: 'none', border: 'none', color: '#555', cursor: 'pointer' }}>
+            <i className="bi bi-search"></i>
+          </button>
+        </form>
+        <div className="nav-neo-actions">
           {user ? (
             <div className="dropdown">
               <span className="ajio-topbar-link" data-bs-toggle="dropdown" style={{ cursor: 'pointer' }}>

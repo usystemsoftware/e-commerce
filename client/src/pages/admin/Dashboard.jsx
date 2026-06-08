@@ -65,28 +65,28 @@ const Dashboard = () => {
       {/* Charts */}
       <div className="row g-4 mb-4">
         <div className="col-lg-8">
-          <div className="card-custom" style={{ padding: '24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--radius)' }}>
             <h5 style={{ fontWeight: 700, marginBottom: '20px' }}>Revenue & Orders (Last 6 Months)</h5>
             <ResponsiveContainer width="100%" height={250}>
               <BarChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                 <XAxis dataKey="month" stroke="var(--text-muted)" fontSize={12} />
                 <YAxis stroke="var(--text-muted)" fontSize={12} />
-                <Tooltip contentStyle={{ background: 'var(--dark-2)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)' }} />
+                <Tooltip contentStyle={{ background: 'var(--admin-card-bg)', border: '1px solid var(--admin-border)', borderRadius: '8px', color: 'var(--admin-text)' }} />
                 <Bar dataKey="revenue" fill="#6c3ef4" radius={[4, 4, 0, 0]} name="Revenue (₹)" />
               </BarChart>
             </ResponsiveContainer>
           </div>
         </div>
         <div className="col-lg-4">
-          <div className="card-custom" style={{ padding: '24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--radius)' }}>
             <h5 style={{ fontWeight: 700, marginBottom: '20px' }}>Orders by Status</h5>
             <ResponsiveContainer width="100%" height={250}>
               <PieChart>
                 <Pie data={pieData} cx="50%" cy="50%" innerRadius={60} outerRadius={90} dataKey="value" paddingAngle={3}>
                   {pieData?.map((entry, i) => <Cell key={i} fill={entry.color} />)}
                 </Pie>
-                <Tooltip contentStyle={{ background: 'var(--dark-2)', border: '1px solid var(--border)', borderRadius: '8px', color: 'var(--text-primary)' }} />
+                <Tooltip contentStyle={{ background: 'var(--admin-card-bg)', border: '1px solid var(--admin-border)', borderRadius: '8px', color: 'var(--admin-text)' }} />
                 <Legend formatter={v => <span style={{ color: 'var(--text-secondary)', fontSize: '12px' }}>{v}</span>} />
               </PieChart>
             </ResponsiveContainer>
@@ -97,7 +97,7 @@ const Dashboard = () => {
       {/* Recent Orders & Low Stock */}
       <div className="row g-4">
         <div className="col-lg-7">
-          <div className="card-custom" style={{ padding: '24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--radius)' }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h5 style={{ fontWeight: 700, margin: 0 }}>Recent Orders</h5>
               <Link to="/admin/orders" style={{ fontSize: '13px', color: 'var(--primary-light)' }}>View All</Link>
@@ -118,7 +118,7 @@ const Dashboard = () => {
           </div>
         </div>
         <div className="col-lg-5">
-          <div className="card-custom" style={{ padding: '24px' }}>
+          <div className="glass-panel" style={{ padding: '24px', borderRadius: 'var(--radius)' }}>
             <div className="d-flex justify-content-between align-items-center mb-4">
               <h5 style={{ fontWeight: 700, margin: 0 }}>Low Stock Alert</h5>
               <Link to="/admin/stock" style={{ fontSize: '13px', color: 'var(--primary-light)' }}>Manage</Link>

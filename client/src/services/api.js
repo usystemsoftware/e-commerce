@@ -37,16 +37,16 @@ export const getProductsAPI = (params) => API.get('/products', { params });
 export const getFeaturedProductsAPI = () => API.get('/products/featured');
 export const getProductByIdAPI = (id) => API.get(`/products/${id}`);
 export const addReviewAPI = (id, data) => API.post(`/products/${id}/review`, data);
-export const createProductAPI = (data) => API.post('/products', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const updateProductAPI = (id, data) => API.put(`/products/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const createProductAPI = (data) => API.post('/products', data);
+export const updateProductAPI = (id, data) => API.put(`/products/${id}`, data);
 export const deleteProductAPI = (id) => API.delete(`/products/${id}`);
 export const adminGetProductsAPI = () => API.get('/admin/products');
 
 // Categories
 export const getCategoriesAPI = () => API.get('/categories');
 export const getAllCategoriesAPI = () => API.get('/categories/all');
-export const createCategoryAPI = (data) => API.post('/categories', data, { headers: { 'Content-Type': 'multipart/form-data' } });
-export const updateCategoryAPI = (id, data) => API.put(`/categories/${id}`, data, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const createCategoryAPI = (data) => API.post('/categories', data);
+export const updateCategoryAPI = (id, data) => API.put(`/categories/${id}`, data);
 export const deleteCategoryAPI = (id) => API.delete(`/categories/${id}`);
 
 // Cart
@@ -76,5 +76,31 @@ export const adminGetOrdersAPI = (params) => API.get('/admin/orders', { params }
 export const adminUpdateOrderStatusAPI = (id, data) => API.put(`/admin/orders/${id}/status`, data);
 export const getStockReportAPI = (threshold) => API.get('/admin/stock', { params: { threshold } });
 export const updateStockAPI = (productId, stock) => API.put(`/admin/stock/${productId}`, { stock });
+
+// Settings
+export const getSettingsAPI = () => API.get('/settings');
+export const updateSettingsAPI = (data) => API.put('/settings', data);
+
+// Banners
+export const getActiveBannersAPI = () => API.get('/banners');
+export const getAllBannersAPI = () => API.get('/banners/all');
+export const createBannerAPI = (data) => API.post('/banners', data);
+export const updateBannerAPI = (id, data) => API.put(`/banners/${id}`, data);
+export const deleteBannerAPI = (id) => API.delete(`/banners/${id}`);
+
+// Coupons
+export const getAllCouponsAPI = () => API.get('/coupons');
+export const createCouponAPI = (data) => API.post('/coupons', data);
+export const updateCouponAPI = (id, data) => API.put(`/coupons/${id}`, data);
+export const deleteCouponAPI = (id) => API.delete(`/coupons/${id}`);
+export const validateCouponAPI = (data) => API.post('/coupons/validate', data);
+
+// Pages
+export const getPagesAPI = () => API.get('/pages');
+export const getPageBySlugAPI = (slug) => API.get(`/pages/${slug}`);
+export const getAllPagesAdminAPI = () => API.get('/pages/all');
+export const createPageAPI = (data) => API.post('/pages', data);
+export const updatePageAPI = (id, data) => API.put(`/pages/${id}`, data);
+export const deletePageAPI = (id) => API.delete(`/pages/${id}`);
 
 export default API;

@@ -2,11 +2,12 @@ const asyncHandler = require('express-async-handler');
 const Order = require('../models/Order');
 const Cart = require('../models/Cart');
 const Product = require('../models/Product');
+const Coupon = require('../models/Coupon');
 
 // @desc  Place new order
 // @route POST /api/orders
 const placeOrder = asyncHandler(async (req, res) => {
-  const { shippingAddress, paymentMethod } = req.body;
+  const { shippingAddress, paymentMethod, couponCode } = req.body;
   const cart = await Cart.findOne({ user: req.user._id }).populate('items.product');
 
   if (!cart || cart.items.length === 0) {
@@ -22,9 +23,24 @@ const placeOrder = asyncHandler(async (req, res) => {
   }
 
   const itemsPrice = cart.items.reduce((acc, i) => acc + i.price * i.quantity, 0);
+  
+  let discountAmount = 0;
+  if (couponCode) {
+    const coupon = await Coupon.findOne({ code: couponCode.toUpperCase() });
+    if (coupon && coupon.isActive && new Date(coupon.expiryDate) >= new Date() && (coupon.usageLimit === null || coupon.usedCount < coupon.usageLimit)) {
+      if (coupon.discountType === 'percentage') {
+        discountAmount = (itemsPrice * coupon.discountValue) / 100;
+      } else {
+        discountAmount = coupon.discountValue;
+      }
+      coupon.usedCount += 1;
+      await coupon.save();
+    }
+  }
+
   const shippingPrice = itemsPrice > 499 ? 0 : 49;
-  const taxPrice = parseFloat((0.05 * itemsPrice).toFixed(2));
-  const totalAmount = parseFloat((itemsPrice + shippingPrice + taxPrice).toFixed(2));
+  const taxPrice = parseFloat((0.05 * (itemsPrice - discountAmount)).toFixed(2));
+  const totalAmount = parseFloat((itemsPrice - discountAmount + shippingPrice + taxPrice).toFixed(2));
 
   const orderItems = cart.items.map(i => ({
     product: i.product._id,
@@ -43,6 +59,8 @@ const placeOrder = asyncHandler(async (req, res) => {
     itemsPrice,
     shippingPrice,
     taxPrice,
+    couponCode: couponCode || '',
+    discountAmount,
     totalAmount,
     paidAt: paymentMethod !== 'COD' ? new Date() : null,
   });

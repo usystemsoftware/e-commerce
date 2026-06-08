@@ -1,6 +1,14 @@
 import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { getPagesAPI } from '../../services/api';
 
 const Footer = () => {
+  const [pages, setPages] = useState([]);
+
+  useEffect(() => {
+    getPagesAPI().then(res => setPages(res.data)).catch(() => {});
+  }, []);
+
   return (
     <footer className="footer-neo">
       <div className="footer-neo-grid">
@@ -26,18 +34,26 @@ const Footer = () => {
         <div>
           <div className="footer-neo-col-title">SUPPORT</div>
           <ul className="footer-neo-links">
-            <li><Link to="#">FAQ</Link></li>
-            <li><Link to="#">SHIPPING INFO</Link></li>
-            <li><Link to="#">RETURNS</Link></li>
-            <li><Link to="#">CONTACT US</Link></li>
+            <li><Link to="/orders">ORDER STATUS</Link></li>
+            <li><Link to="/profile">MY ACCOUNT</Link></li>
+            <li><Link to="/cart">CART</Link></li>
+            <li><Link to="/contact">CONTACT US</Link></li>
           </ul>
         </div>
         <div>
-          <div className="footer-neo-col-title">LEGAL</div>
+          <div className="footer-neo-col-title">PAGES</div>
           <ul className="footer-neo-links">
-            <li><Link to="#">TERMS & CONDITIONS</Link></li>
-            <li><Link to="#">PRIVACY POLICY</Link></li>
-            <li><Link to="#">COOKIE POLICY</Link></li>
+            {pages.length > 0 ? (
+              pages.map(page => (
+                <li key={page._id}><Link to={`/page/${page.slug}`}>{page.title.toUpperCase()}</Link></li>
+              ))
+            ) : (
+              <>
+                <li><Link to="#">TERMS & CONDITIONS</Link></li>
+                <li><Link to="#">PRIVACY POLICY</Link></li>
+                <li><Link to="#">COOKIE POLICY</Link></li>
+              </>
+            )}
           </ul>
         </div>
       </div>

@@ -11,34 +11,31 @@ const ProductCard = ({ product }) => {
   const discountPercent = product.discountPercent || (product.discountPrice > 0
     ? Math.round(((product.price - product.discountPrice) / product.price) * 100) : 0);
 
-  const stars = "★".repeat(Math.floor(product.ratings || 0)) + ((product.ratings || 0) % 1 >= 0.5 ? "½" : "") + "☆".repeat(5 - Math.ceil(product.ratings || 0));
+  // Simulated data for Alibaba style
+  const soldCount = (product.numReviews || 0) * 10 + Math.floor(Math.random() * 50) + 10;
+  const supplierYears = Math.floor(Math.random() * 10) + 1;
 
   return (
-    <div className="product-card-neo">
-      <div className="product-neo-img-wrap">
+    <div className="alibaba-card">
+      <div className="alibaba-card-img-wrap">
         <Link to={`/products/${product._id}`}>
           <img
-            src={product.images?.[0] ? product.images[0] : `https://picsum.photos/seed/${product._id}/400/300`}
+            src={product.images?.[0] ? product.images[0] : `https://picsum.photos/seed/${product._id}/400/400`}
             alt={product.name}
             loading="lazy"
           />
         </Link>
-        {discountPercent > 0 && <span className="discount-neo-tag">-{discountPercent}%</span>}
-        {product.isFeatured && <span className="new-neo-tag">HOT</span>}
-        <div className="product-neo-actions">
+        <div className="alibaba-quick-actions">
           <button 
-            className="product-neo-action-btn" 
-            onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)} 
-            title={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+            className="alibaba-quick-btn" 
+            onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
+            title="Wishlist"
           >
-            <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? 'var(--hot)' : undefined }}></i>
+            <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? '#ff4757' : '#555' }}></i>
           </button>
-          <Link to={`/products/${product._id}`} className="product-neo-action-btn" title="Quick view">
-            <i className="bi bi-eye"></i>
-          </Link>
           <button 
-            className="product-neo-action-btn" 
-            onClick={() => addToCart(product._id, 1)} 
+            className="alibaba-quick-btn" 
+            onClick={() => addToCart(product._id, 1)}
             disabled={product.stock === 0}
             title="Add to cart"
           >
@@ -46,26 +43,37 @@ const ProductCard = ({ product }) => {
           </button>
         </div>
       </div>
-      <div className="product-neo-body">
-        <div className="product-neo-brand">{product.brand}</div>
-        <Link to={`/products/${product._id}`} className="text-decoration-none">
-          <div className="product-neo-name">{product.name}</div>
+      <div className="alibaba-card-body">
+        <Link to={`/products/${product._id}`} className="alibaba-card-title">
+          {product.name}
         </Link>
-        <div className="product-neo-rating">
-          <span className="stars-neo">{stars.slice(0,5)}</span>
-          <span className="rating-neo-num">{product.ratings || 0} ({(product.numReviews || 0).toLocaleString()})</span>
+        
+        <div className="alibaba-badge-row">
+          {discountPercent > 0 ? (
+            <span className="alibaba-badge text-danger">
+              <i className="bi bi-graph-down-arrow"></i> Lower priced than similar
+            </span>
+          ) : (
+            <span className="alibaba-badge text-success">
+              <i className="bi bi-truck"></i> Ready to ship
+            </span>
+          )}
         </div>
-        <div className="product-neo-price">
-          <span className="price-neo-now">₹{currentPrice.toLocaleString()}</span>
-          {product.discountPrice > 0 && <span className="price-neo-was">₹{product.price.toLocaleString()}</span>}
+
+        <div className="alibaba-card-price">
+          ₹{currentPrice.toLocaleString()}
+          {product.discountPrice > 0 && <span className="alibaba-old-price">₹{product.price.toLocaleString()}</span>}
         </div>
-        <button 
-          className="add-neo-btn" 
-          onClick={() => addToCart(product._id, 1)}
-          disabled={product.stock === 0}
-        >
-          {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'} <i className="bi bi-plus-lg" style={{ fontSize: 14 }}></i>
-        </button>
+
+        <div className="alibaba-card-meta">
+          <span className="moq-text">MOQ: {product.stock > 0 ? '1 piece' : 'Out of stock'}</span>
+          <span className="sold-count">{soldCount.toLocaleString()} sold</span>
+        </div>
+
+        <div className="alibaba-card-supplier">
+          <span className="verified-badge"><i className="bi bi-patch-check-fill"></i> Verified</span>
+          <span className="supplier-info">· {supplierYears} yrs · IN</span>
+        </div>
       </div>
     </div>
   );

@@ -154,7 +154,7 @@ const Home = () => {
             </div>
             <Link to="/products" className="section-neo-link">VIEW ALL GEAR <i className="bi bi-arrow-right"></i></Link>
           </div>
-          
+
           {loading ? <Spinner /> : (
             <div className="grid-neo-4-padded">
               {featured.map(product => (
@@ -165,39 +165,26 @@ const Home = () => {
         </div>
       </section>
 
-      {/* ── BENTO PROMO ────────────────────── */}
-      <section className="section-neo" style={{ paddingTop: 0 }}>
-        <div className="container-neo">
-          <div className="section-neo-head">
-            <h2 className="section-neo-title"><span className="num">02 //</span> CURATED DROPS</h2>
-          </div>
-          
-          <div className="promo-neo-grid">
-            <div className="promo-neo-cell span-2 span-row-2">
-              <img src="https://images.unsplash.com/photo-1550537687-c9a0c270da09?q=80&w=800&auto=format&fit=crop" alt="Cyber Gear" />
-              <div className="promo-neo-overlay">
-                <div className="promo-neo-tag">ACID COLLECTION</div>
-                <div className="promo-neo-title">CYBER GEAR V1</div>
-                <Link to="/products" className="promo-neo-cta">SHOP DROP <i className="bi bi-arrow-right"></i></Link>
+      {/* ===== PROMO BANNERS ===== */}
+      <section className="py-5" style={{ background: 'var(--dark-2)' }}>
+        <div className="container">
+          <div className="row g-4">
+            <div className="col-md-6">
+              <div style={{ background: 'linear-gradient(135deg, #e3f2fd, #bbdefb)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '40px', position: 'relative', overflow: 'hidden', minHeight: '200px' }}>
+                <div style={{ position: 'absolute', right: '-20px', top: '-20px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(108,62,244,0.3), transparent)', borderRadius: '50%' }}></div>
+                <span className="badge-warning mb-3 d-inline-block">Limited Time</span>
+                <h3 style={{ fontWeight: 800, marginBottom: '10px' }}>Electronics Sale</h3>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>Up to 40% off on top brands</p>
+                <Link to="/products?category=electronics" className="btn-primary-custom">Shop Now <i className="bi bi-arrow-right"></i></Link>
               </div>
             </div>
-            <div className="promo-neo-cell">
-              <img src="https://images.unsplash.com/photo-1595950653106-6c9ebd614d3a?q=80&w=400&auto=format&fit=crop" alt="Sneakers" />
-              <div className="promo-neo-overlay">
-                <div className="promo-neo-tag">FOOTWEAR</div>
-                <div className="promo-neo-title">SNEAKERS</div>
-              </div>
-            </div>
-            <div className="promo-neo-cell">
-              <div className="promo-neo-overlay dark" style={{ background: 'var(--ink)' }}>
-                <div className="promo-neo-stat">50%</div>
-                <div className="promo-neo-stat-label">OFF EVERYTHING</div>
-              </div>
-            </div>
-            <div className="promo-neo-cell span-2" style={{ background: 'var(--acid)' }}>
-              <div className="promo-neo-overlay" style={{ background: 'none' }}>
-                <div className="promo-neo-title" style={{ color: 'var(--ink)' }}>GAME ON.</div>
-                <div className="promo-neo-tag" style={{ color: 'var(--ink)' }}>TECH ACCS</div>
+            <div className="col-md-6">
+              <div style={{ background: 'linear-gradient(135deg, #fff3e0, #ffe0b2)', border: '1px solid var(--border)', borderRadius: 'var(--radius-lg)', padding: '40px', position: 'relative', overflow: 'hidden', minHeight: '200px' }}>
+                <div style={{ position: 'absolute', right: '-20px', top: '-20px', width: '200px', height: '200px', background: 'radial-gradient(circle, rgba(249,115,22,0.3), transparent)', borderRadius: '50%' }}></div>
+                <span className="badge-secondary mb-3 d-inline-block">New Arrivals</span>
+                <h3 style={{ fontWeight: 800, marginBottom: '10px' }}>Fashion Picks</h3>
+                <p style={{ color: 'var(--text-secondary)', marginBottom: '20px' }}>Trending styles at best prices</p>
+                <Link to="/products?category=fashion" className="btn-outline-custom">Explore <i className="bi bi-arrow-right"></i></Link>
               </div>
             </div>
           </div>
@@ -236,10 +223,10 @@ const Home = () => {
           <p className="newsletter-neo-sub">Join the cult. Get early access to exclusive drops, secret sales, and the acid wash aesthetic directly to your inbox.</p>
         </div>
         <form onSubmit={e => { e.preventDefault(); alert('JOINED THE CULT.'); setEmail(''); }} className="newsletter-neo-form">
-          <input 
-            type="email" 
-            placeholder="ENTER YOUR EMAIL //" 
-            className="newsletter-neo-input" 
+          <input
+            type="email"
+            placeholder="ENTER YOUR EMAIL //"
+            className="newsletter-neo-input"
             value={email}
             onChange={e => setEmail(e.target.value)}
             required

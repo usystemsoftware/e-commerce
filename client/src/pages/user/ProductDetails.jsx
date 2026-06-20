@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProductByIdAPI, addReviewAPI } from '../../services/api';
+import { getProductByIdAPI, addReviewAPI, getProductsAPI } from '../../services/api';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
+import { useCompare } from '../../context/CompareContext';
+import ProductCard from '../../components/ProductCard/ProductCard';
 import Spinner from '../../components/Spinner/Spinner';
 import { toast } from 'react-toastify';
 
@@ -12,6 +14,7 @@ const ProductDetails = () => {
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
+  const { addToCompare, compareItems } = useCompare();
   const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -20,8 +23,10 @@ const ProductDetails = () => {
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
+  const [relatedProducts, setRelatedProducts] = useState([]);
 
   const wishlisted = isWishlisted(id);
+  const isCompared = compareItems?.some(p => p._id === id);
 
   useEffect(() => {
     const fetch = async () => {
@@ -29,6 +34,29 @@ const ProductDetails = () => {
       try {
         const { data } = await getProductByIdAPI(id);
         setProduct(data);
+        
+        // Save to recently viewed
+        const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+        const existingIndex = recent.findIndex(p => p._id === data._id);
+        if (existingIndex > -1) recent.splice(existingIndex, 1);
+        recent.unshift({
+          _id: data._id,
+          name: data.name,
+          images: data.images,
+          price: data.price,
+          originalPrice: data.price,
+          discountPrice: data.discountPrice,
+          ratings: data.ratings,
+          slug: data.slug || data._id
+        });
+        if (recent.length > 10) recent.pop();
+        localStorage.setItem('recentlyViewed', JSON.stringify(recent));
+
+        const catId = data.category?._id || data.category;
+        if (catId) {
+          const { data: related } = await getProductsAPI({ category: catId, limit: 5 });
+          setRelatedProducts(related.products.filter(p => p._id !== id).slice(0, 4));
+        }
       } catch { navigate('/products'); }
       finally { setLoading(false); }
     };
@@ -159,8 +187,16 @@ const ProductDetails = () => {
               <button
                 onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
                 style={{ width: '52px', height: '52px', borderRadius: 'var(--radius-sm)', background: 'var(--card-bg)', border: `1px solid ${wishlisted ? 'var(--danger)' : 'var(--border)'}`, color: wishlisted ? 'var(--danger)' : 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', transition: 'all 0.2s' }}
+                title="Wishlist"
               >
                 <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`}></i>
+              </button>
+              <button
+                onClick={() => !isCompared && addToCompare(product)}
+                style={{ width: '52px', height: '52px', borderRadius: 'var(--radius-sm)', background: 'var(--card-bg)', border: `1px solid ${isCompared ? 'var(--primary)' : 'var(--border)'}`, color: isCompared ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', transition: 'all 0.2s' }}
+                title="Compare"
+              >
+                <i className="bi bi-layers"></i>
               </button>
             </div>
 
@@ -238,6 +274,20 @@ const ProductDetails = () => {
             </div>
           )}
         </div>
+
+        {/* Related Products */}
+        {relatedProducts.length > 0 && (
+          <div className="mt-5" style={{ paddingTop: '40px', borderTop: '1px solid var(--border)' }}>
+            <h3 style={{ fontWeight: 800, marginBottom: '24px' }}>You Might Also Like</h3>
+            <div className="row g-4">
+              {relatedProducts.map(p => (
+                <div key={p._id} className="col-6 col-md-3">
+                  <ProductCard product={p} />
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

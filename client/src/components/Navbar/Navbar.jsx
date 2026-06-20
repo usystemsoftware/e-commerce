@@ -3,7 +3,7 @@ import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiChevronDown } from 'react-icons/fi';
+import { FiSearch, FiHeart, FiShoppingCart, FiUser, FiMenu, FiChevronDown, FiLayers } from 'react-icons/fi';
 
 const categories = [
   { id: 'electronics', name: 'Electronics' },
@@ -89,6 +89,11 @@ const Navbar = () => {
               <span>Login</span>
             </Link>
           )}
+
+          <Link to="/compare" className="mp-action-btn">
+            <FiLayers size={20} />
+            <span>Compare</span>
+          </Link>
 
           <Link to="/wishlist" className="mp-action-btn">
             <FiHeart size={20} />

@@ -8,6 +8,8 @@ import { motion } from 'framer-motion';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import { FiHeart, FiChevronRight, FiClock } from 'react-icons/fi';
 import 'react-lazy-load-image-component/src/effects/blur.css';
+import { useWishlist } from '../../context/WishlistContext';
+import { useCart } from '../../context/CartContext';
 
 const defaultCategoryIcon = 'https://rukminim1.flixcart.com/flap/128/128/image/29327f40e9c4d26b.png?q=100';
 
@@ -38,6 +40,10 @@ const CountdownTimer = () => {
 };
 
 const ProductCard = ({ product }) => {
+  const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
+  const { addToCart } = useCart();
+  const wishlisted = isWishlisted(product._id);
+  
   const imgUrl = product.images?.[0] || 'https://via.placeholder.com/150';
   const displayImg = imgUrl.startsWith('http') ? imgUrl : `http://localhost:5000${imgUrl}`;
   const discount = product.originalPrice && product.originalPrice > product.price 
@@ -46,8 +52,14 @@ const ProductCard = ({ product }) => {
 
   return (
     <motion.div whileHover={{ y: -5 }} className="mp-product-card">
-      <div className="mp-wishlist-btn"><FiHeart /></div>
-      <Link to={`/product/${product.slug}`} style={{ textDecoration: 'none', color: 'inherit', flex: 1, display: 'flex', flexDirection: 'column' }}>
+      <div 
+        className="mp-wishlist-btn" 
+        onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
+        style={{ color: wishlisted ? '#ff4757' : 'inherit', cursor: 'pointer', zIndex: 10, right: '10px', top: '10px' }}
+      >
+        <FiHeart fill={wishlisted ? '#ff4757' : 'none'} color={wishlisted ? '#ff4757' : 'currentColor'} />
+      </div>
+      <Link to={`/products/${product._id}`} style={{ textDecoration: 'none', color: 'inherit', flex: 1, display: 'flex', flexDirection: 'column' }}>
         <div className="mp-product-image-container">
           <LazyLoadImage src={displayImg} alt={product.name} effect="blur" className="mp-product-image" />
         </div>
@@ -61,7 +73,12 @@ const ProductCard = ({ product }) => {
           {discount > 0 && <span className="mp-discount">{discount}% off</span>}
         </div>
       </Link>
-      <button className="mp-add-cart-btn">Add to Cart</button>
+      <button 
+        className="mp-add-cart-btn" 
+        onClick={(e) => { e.preventDefault(); addToCart(product._id, 1); }}
+      >
+        Add to Cart
+      </button>
     </motion.div>
   );
 };
@@ -70,9 +87,12 @@ const Home = () => {
   const [featured, setFeatured] = useState([]);
   const [categories, setCategories] = useState([]);
   const [banners, setBanners] = useState([]);
+  const [recentlyViewed, setRecentlyViewed] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
+    setRecentlyViewed(recent);
     const fetchData = async () => {
       try { const featRes = await getFeaturedProductsAPI(); setFeatured(featRes.data); } catch (e) {}
       try { const catRes = await getCategoriesAPI(); setCategories(catRes.data); } catch (e) {}
@@ -195,6 +215,35 @@ const Home = () => {
                 {featured.slice(1, 5).map(product => (
                   <ProductCard key={`trend-${product._id}`} product={product} />
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* ── RECENTLY VIEWED PRODUCTS ──────────────── */}
+          {recentlyViewed.length > 0 && (
+            <div className="mp-section" style={{ background: '#f5f7fa', padding: '0', boxShadow: 'none' }}>
+              <div style={{ background: '#fff', padding: '20px', boxShadow: 'var(--mp-shadow)', borderRadius: '4px' }}>
+                <div className="mp-section-header">
+                  <h2 className="mp-section-title">Recently Viewed</h2>
+                </div>
+                <Swiper
+                  modules={[Navigation]}
+                  navigation
+                  spaceBetween={16}
+                  slidesPerView={1}
+                  breakpoints={{
+                    480: { slidesPerView: 2 },
+                    768: { slidesPerView: 3 },
+                    1024: { slidesPerView: 4 },
+                    1200: { slidesPerView: 5 }
+                  }}
+                >
+                  {recentlyViewed.map(product => (
+                    <SwiperSlide key={`recent-${product._id}`}>
+                      <ProductCard product={product} />
+                    </SwiperSlide>
+                  ))}
+                </Swiper>
               </div>
             </div>
           )}

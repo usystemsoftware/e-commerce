@@ -9,6 +9,7 @@ import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
 import { SettingsProvider } from './context/SettingsContext';
+import { CompareProvider } from './context/CompareContext';
 import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute/ProtectedRoute';
 
 import Navbar from './components/Navbar/Navbar';
@@ -20,6 +21,7 @@ import ProductListing from './pages/user/ProductListing';
 import ProductDetails from './pages/user/ProductDetails';
 import Cart from './pages/user/Cart';
 import Wishlist from './pages/user/Wishlist';
+import Compare from './pages/user/Compare';
 import Checkout from './pages/user/Checkout';
 import MyOrders from './pages/user/MyOrders';
 import OrderDetail from './pages/user/OrderDetail';
@@ -65,6 +67,7 @@ function App() {
         <SettingsProvider>
           <CartProvider>
             <WishlistProvider>
+              <CompareProvider>
             <ToastContainer
               position="top-right"
               autoClose={3000}
@@ -84,6 +87,7 @@ function App() {
               <Route path="/products/:id" element={<UserLayout><ProductDetails /></UserLayout>} />
               <Route path="/page/:slug" element={<UserLayout><DynamicPage /></UserLayout>} />
               <Route path="/contact" element={<UserLayout><ContactUs /></UserLayout>} />
+              <Route path="/compare" element={<UserLayout><Compare /></UserLayout>} />
 
               <Route path="/cart" element={
                 <ProtectedRoute>
@@ -147,6 +151,7 @@ function App() {
                 </UserLayout>
               } />
             </Routes>
+            </CompareProvider>
             </WishlistProvider>
           </CartProvider>
         </SettingsProvider>

@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getOrderByIdAPI, cancelOrderAPI } from '../../services/api';
+import { getOrderByIdAPI, cancelOrderAPI, requestReturnAPI } from '../../services/api';
 import Spinner from '../../components/Spinner/Spinner';
 import { toast } from 'react-toastify';
 
-const statusSteps = ['pending', 'processing', 'shipped', 'delivered'];
+const statusSteps = ['pending', 'processing', 'shipped', 'delivered', 'return_requested', 'returned'];
 
 const OrderDetail = () => {
   const { id } = useParams();
@@ -27,6 +27,17 @@ const OrderDetail = () => {
       toast.success('Order cancelled');
     } catch (err) { toast.error(err.response?.data?.message || 'Cannot cancel'); }
     finally { setCancelling(false); }
+  };
+
+  const handleReturn = async () => {
+    const reason = window.prompt('Please enter a reason for returning this order:');
+    if (!reason) return;
+    try {
+      await requestReturnAPI(id, reason);
+      const { data } = await getOrderByIdAPI(id);
+      setOrder(data);
+      toast.success('Return request submitted');
+    } catch (err) { toast.error(err.response?.data?.message || 'Cannot request return'); }
   };
 
   if (loading) return <Spinner />;
@@ -91,6 +102,14 @@ const OrderDetail = () => {
                 {order.cancelReason && <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>Reason: {order.cancelReason}</div>}
               </div>
             )}
+            
+            {['return_requested', 'returned'].includes(order.orderStatus) && (
+              <div style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.2)', borderRadius: 'var(--radius)', padding: '20px', marginBottom: '24px' }}>
+                <i className="bi bi-arrow-return-left me-2" style={{ color: 'var(--warning)' }}></i>
+                <strong>{order.orderStatus === 'returned' ? 'Order Returned & Refunded' : 'Return Requested'}</strong>
+                {order.returnReason && <div style={{ fontSize: '13px', color: 'var(--text-muted)', marginTop: '4px' }}>Reason: {order.returnReason}</div>}
+              </div>
+            )}
 
             {/* Items */}
             <div className="card-custom mb-4">
@@ -138,9 +157,14 @@ const OrderDetail = () => {
                 <span className={`ms-1 badge-${order.paymentStatus === 'paid' ? 'success' : 'warning'}`}>{order.paymentStatus}</span>
               </div>
             </div>
-            {!isCancelled && !['shipped', 'delivered'].includes(order.orderStatus) && (
-              <button className="w-100" onClick={handleCancel} disabled={cancelling} style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: 'var(--danger)', padding: '12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '14px' }}>
+            {!isCancelled && !['shipped', 'delivered', 'return_requested', 'returned'].includes(order.orderStatus) && (
+              <button className="w-100" onClick={handleCancel} disabled={cancelling} style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.3)', color: 'var(--danger)', padding: '12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '14px', marginBottom: '10px' }}>
                 {cancelling ? 'Cancelling...' : <><i className="bi bi-x-circle me-2"></i>Cancel Order</>}
+              </button>
+            )}
+            {order.orderStatus === 'delivered' && (
+              <button className="w-100" onClick={handleReturn} style={{ background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', color: 'var(--warning)', padding: '12px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '14px' }}>
+                <i className="bi bi-arrow-return-left me-2"></i>Return Order
               </button>
             )}
           </div>

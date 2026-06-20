@@ -4,8 +4,8 @@ import { adminGetOrdersAPI, adminUpdateOrderStatusAPI } from '../../services/api
 import Spinner from '../../components/Spinner/Spinner';
 import { toast } from 'react-toastify';
 
-const STATUS_OPTIONS = ['pending', 'processing', 'shipped', 'delivered', 'cancelled'];
-const STATUS_COLORS = { pending: 'warning', processing: 'primary', shipped: 'cyan', delivered: 'success', cancelled: 'danger' };
+const STATUS_OPTIONS = ['pending', 'processing', 'shipped', 'delivered', 'cancelled', 'return_requested', 'returned'];
+const STATUS_COLORS = { pending: 'warning', processing: 'primary', shipped: 'cyan', delivered: 'success', cancelled: 'danger', return_requested: 'warning', returned: 'secondary' };
 
 const ManageOrders = () => {
   const [orders, setOrders] = useState([]);
@@ -139,6 +139,12 @@ const ManageOrders = () => {
                               {order.shippingAddress?.street}, {order.shippingAddress?.city}<br />
                               {order.shippingAddress?.state} - {order.shippingAddress?.pincode}
                             </div>
+                            {order.returnReason && (
+                              <div className="mt-3" style={{ background: 'rgba(245,158,11,0.1)', padding: '10px', borderRadius: '6px', border: '1px solid rgba(245,158,11,0.2)' }}>
+                                <div style={{ fontSize: '11px', color: 'var(--warning)', fontWeight: 700, textTransform: 'uppercase', marginBottom: '4px' }}>Return Reason</div>
+                                <div style={{ fontSize: '13px', color: 'var(--text-primary)' }}>{order.returnReason}</div>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </td>

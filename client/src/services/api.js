@@ -66,6 +66,11 @@ export const placeOrderAPI = (data) => API.post('/orders', data);
 export const getMyOrdersAPI = () => API.get('/orders/my-orders');
 export const getOrderByIdAPI = (id) => API.get(`/orders/${id}`);
 export const cancelOrderAPI = (id, reason) => API.put(`/orders/${id}/cancel`, { reason });
+export const requestReturnAPI = (id, reason) => API.put(`/orders/${id}/return`, { reason });
+
+// Payments
+export const createRazorpayOrderAPI = (data) => API.post('/payment/razorpay/order', data);
+export const verifyRazorpayPaymentAPI = (data) => API.post('/payment/razorpay/verify', data);
 
 // Admin
 export const getDashboardStatsAPI = () => API.get('/admin/dashboard');

@@ -280,7 +280,7 @@ const Checkout = () => {
 
           {/* Order Summary */}
           <div className="col-lg-5">
-            <div className="card-custom" style={{ position: 'sticky', top: '80px' }}>
+            <div className="card-custom" style={{ position: 'sticky', top: '90px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 'var(--mp-radius-lg)', padding: '30px', boxShadow: 'var(--mp-shadow)' }}>
               <h5 style={{ fontWeight: 700, marginBottom: '20px' }}>Order Summary</h5>
               <div className="d-flex flex-column gap-3 mb-4" style={{ maxHeight: '250px', overflowY: 'auto' }}>
                 {items.map(item => (

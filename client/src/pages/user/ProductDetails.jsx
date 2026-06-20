@@ -8,6 +8,7 @@ import { useCompare } from '../../context/CompareContext';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import Spinner from '../../components/Spinner/Spinner';
 import { toast } from 'react-toastify';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const ProductDetails = () => {
   const { id } = useParams();
@@ -113,16 +114,25 @@ const ProductDetails = () => {
         <div className="row g-5">
           {/* Images */}
           <div className="col-lg-5">
-            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '12px' }}>
-              <img
-                src={product.images?.[selectedImg] || `https://picsum.photos/seed/${product._id}/600/500`}
-                alt={product.name}
-                style={{ width: '100%', height: '420px', objectFit: 'cover' }}
-              />
-            </div>
-            <div className="d-flex gap-2">
+            <AnimatePresence mode="wait">
+              <motion.div 
+                key={selectedImg}
+                initial={{ opacity: 0, scale: 0.98 }}
+                animate={{ opacity: 1, scale: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.3 }}
+                style={{ background: '#f8fafc', borderRadius: 'var(--mp-radius-lg)', overflow: 'hidden', marginBottom: '16px', boxShadow: 'var(--mp-shadow)' }}
+              >
+                <img
+                  src={product.images?.[selectedImg] || `https://picsum.photos/seed/${product._id}/600/500`}
+                  alt={product.name}
+                  style={{ width: '100%', height: '480px', objectFit: 'cover' }}
+                />
+              </motion.div>
+            </AnimatePresence>
+            <div className="d-flex gap-3 overflow-auto pb-2">
               {(product.images?.length > 0 ? product.images : [`https://picsum.photos/seed/${product._id}/600/500`]).map((img, i) => (
-                <div key={i} onClick={() => setSelectedImg(i)} style={{ width: '72px', height: '72px', border: `2px solid ${selectedImg === i ? 'var(--primary)' : 'var(--border)'}`, borderRadius: 'var(--radius-sm)', overflow: 'hidden', cursor: 'pointer', flexShrink: 0 }}>
+                <div key={i} onClick={() => setSelectedImg(i)} style={{ width: '80px', height: '80px', border: `2px solid ${selectedImg === i ? 'var(--mp-primary)' : 'transparent'}`, borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', flexShrink: 0, opacity: selectedImg === i ? 1 : 0.6, transition: 'all 0.3s' }}>
                   <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               ))}
@@ -212,15 +222,13 @@ const ProductDetails = () => {
         </div>
 
         {/* Tabs */}
-        <div className="mt-5">
-          <div className="d-flex gap-2 mb-4 flex-wrap" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
+        <div className="mt-5 pt-4">
+          <div className="d-flex gap-4 mb-4 flex-wrap" style={{ borderBottom: '1px solid var(--mp-border)', paddingBottom: '16px' }}>
             {['description', 'reviews'].map(tab => (
               <button key={tab} onClick={() => setActiveTab(tab)} style={{
-                background: activeTab === tab ? 'rgba(108,62,244,0.15)' : 'transparent',
-                border: `1px solid ${activeTab === tab ? 'var(--primary)' : 'var(--border)'}`,
-                color: activeTab === tab ? 'var(--primary-light)' : 'var(--text-muted)',
-                padding: '8px 20px', borderRadius: '50px', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '14px'
+                position: 'relative', background: 'transparent', border: 'none', padding: '8px 4px', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '16px', color: activeTab === tab ? 'var(--mp-primary)' : 'var(--mp-text-light)'
               }}>
+                {activeTab === tab && <motion.div layoutId="tab-indicator" style={{ position: 'absolute', bottom: -17, left: 0, right: 0, height: 3, background: 'var(--mp-primary)', borderRadius: '3px' }} />}
                 {tab.charAt(0).toUpperCase() + tab.slice(1)} {tab === 'reviews' && `(${product.reviews?.length || 0})`}
               </button>
             ))}
@@ -288,6 +296,24 @@ const ProductDetails = () => {
             </div>
           </div>
         )}
+      </div>
+
+      {/* Sticky Buy Actions */}
+      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(12px)', borderTop: '1px solid var(--mp-border)', padding: '16px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, boxShadow: '0 -4px 10px rgba(0,0,0,0.05)' }}>
+        <div className="container d-flex justify-content-between align-items-center">
+          <div className="d-none d-md-flex align-items-center gap-3">
+            <img src={product.images?.[0]} alt={product.name} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} />
+            <div>
+              <div style={{ fontWeight: 600, fontSize: '14px' }}>{product.name}</div>
+              <div style={{ fontWeight: 800, color: 'var(--mp-primary)' }}>₹{price.toLocaleString()}</div>
+            </div>
+          </div>
+          <div className="d-flex gap-3 w-100 w-md-auto justify-content-end">
+             <button className="btn-primary-custom" style={{ minWidth: '160px', padding: '12px', justifyContent: 'center', fontSize: '15px' }} onClick={handleAddToCart} disabled={product.stock === 0}>
+                Add to Cart
+             </button>
+          </div>
+        </div>
       </div>
     </div>
   );

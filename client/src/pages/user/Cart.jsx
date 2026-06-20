@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const Cart = () => {
   const { cart, updateQuantity, removeFromCart, clearCart } = useCart();
@@ -39,33 +40,44 @@ const Cart = () => {
               </button>
             </div>
             <div className="d-flex flex-column gap-3">
-              {items.map(item => (
-                <div key={item.product._id} className="cart-item">
-                  <img src={item.product.images?.[0] || `https://picsum.photos/seed/${item.product._id}/150/150`} alt={item.product.name} />
-                  <div style={{ flex: 1 }}>
-                    <Link to={`/products/${item.product._id}`} style={{ fontWeight: 600, color: 'var(--text-primary)', fontSize: '15px', textDecoration: 'none', display: 'block', marginBottom: '4px' }}>{item.product.name}</Link>
-                    <div style={{ fontSize: '13px', color: 'var(--text-muted)' }}>Unit price: ₹{item.price.toLocaleString()}</div>
-                  </div>
-                  <div className="qty-control">
-                    <button className="qty-btn" onClick={() => updateQuantity(item.product._id, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
-                    <span className="qty-display">{item.quantity}</span>
-                    <button className="qty-btn" onClick={() => updateQuantity(item.product._id, item.quantity + 1)} disabled={item.quantity >= item.product.stock}>+</button>
-                  </div>
-                  <div style={{ minWidth: '100px', textAlign: 'right' }}>
-                    <div style={{ fontWeight: 700, fontSize: '16px' }}>₹{(item.price * item.quantity).toLocaleString()}</div>
-                    <button onClick={() => removeFromCart(item.product._id)} style={{ background: 'none', border: 'none', color: 'var(--danger)', fontSize: '13px', cursor: 'pointer', marginTop: '4px' }}>
-                      <i className="bi bi-trash3"></i> Remove
-                    </button>
-                  </div>
-                </div>
-              ))}
+              <AnimatePresence>
+                {items.map(item => (
+                  <motion.div 
+                    key={item.product._id} 
+                    layout
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, x: -50 }}
+                    transition={{ duration: 0.3 }}
+                    className="cart-item" 
+                    style={{ background: 'var(--mp-white)', border: 'none', borderRadius: 'var(--mp-radius)', padding: '16px', display: 'flex', gap: '16px', alignItems: 'center', boxShadow: 'var(--mp-shadow)' }}
+                  >
+                    <img src={item.product.images?.[0] || `https://picsum.photos/seed/${item.product._id}/150/150`} alt={item.product.name} style={{ width: '100px', height: '100px', objectFit: 'cover', borderRadius: '8px' }} />
+                    <div style={{ flex: 1 }}>
+                      <Link to={`/products/${item.product._id}`} style={{ fontWeight: 600, color: 'var(--mp-text)', fontSize: '15px', textDecoration: 'none', display: 'block', marginBottom: '4px' }}>{item.product.name}</Link>
+                      <div style={{ fontSize: '13px', color: 'var(--mp-text-light)' }}>Unit price: ₹{item.price.toLocaleString()}</div>
+                    </div>
+                    <div className="qty-control" style={{ background: '#f8fafc', padding: '4px 8px', borderRadius: '50px', border: '1px solid var(--mp-border)' }}>
+                      <button className="qty-btn" onClick={() => updateQuantity(item.product._id, item.quantity - 1)} disabled={item.quantity <= 1} style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 8px' }}>−</button>
+                      <span className="qty-display" style={{ fontWeight: 600, padding: '0 8px' }}>{item.quantity}</span>
+                      <button className="qty-btn" onClick={() => updateQuantity(item.product._id, item.quantity + 1)} disabled={item.quantity >= item.product.stock} style={{ border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '18px', padding: '0 8px' }}>+</button>
+                    </div>
+                    <div style={{ minWidth: '100px', textAlign: 'right' }}>
+                      <div style={{ fontWeight: 800, fontSize: '18px', color: 'var(--mp-primary)' }}>₹{(item.price * item.quantity).toLocaleString()}</div>
+                      <button onClick={() => removeFromCart(item.product._id)} style={{ background: 'none', border: 'none', color: 'var(--danger)', fontSize: '13px', cursor: 'pointer', marginTop: '8px', padding: '4px 8px', borderRadius: '4px' }}>
+                        <i className="bi bi-trash3"></i> Remove
+                      </button>
+                    </div>
+                  </motion.div>
+                ))}
+              </AnimatePresence>
             </div>
             <div className="mt-3">
               <Link to="/products" style={{ color: 'var(--primary-light)', fontSize: '14px' }}><i className="bi bi-arrow-left me-1"></i>Continue Shopping</Link>
             </div>
           </div>
           <div className="col-lg-4">
-            <div className="card-custom" style={{ position: 'sticky', top: '80px' }}>
+            <div className="card-custom" style={{ position: 'sticky', top: '90px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 'var(--mp-radius-lg)', padding: '24px', boxShadow: 'var(--mp-shadow)' }}>
               <h5 style={{ fontWeight: 700, marginBottom: '24px' }}>Order Summary</h5>
               <div className="d-flex justify-content-between mb-2" style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
                 <span>Subtotal ({items.length} items)</span>

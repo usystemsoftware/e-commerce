@@ -115,6 +115,7 @@ export const updateContactStatusAPI = (id, status) => API.put(`/contact/${id}/st
 export const deleteContactAPI = (id) => API.delete(`/contact/${id}`);
 
 // Subscribers
+export const subscribeAPI = (data) => API.post('/subscribers', data);
 export const getSubscribersAPI = () => API.get('/subscribers');
 export const deleteSubscriberAPI = (id) => API.delete(`/subscribers/${id}`);
 

@@ -43,17 +43,19 @@ const ProductCard = ({ product }) => {
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
   const { addToCart } = useCart();
   const wishlisted = isWishlisted(product._id);
-  
+
   const imgUrl = product.images?.[0] || 'https://via.placeholder.com/150';
   const displayImg = imgUrl.startsWith('http') ? imgUrl : `http://localhost:5000${imgUrl}`;
-  const discount = product.originalPrice && product.originalPrice > product.price 
-    ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100) 
-    : 0;
+  const currentPrice = product.discountPrice > 0 ? product.discountPrice : product.price;
+  const originalPrice = product.discountPrice > 0 ? product.price : null;
+  const discount = product.discountPercent || (product.discountPrice > 0
+    ? Math.round(((product.price - product.discountPrice) / product.price) * 100)
+    : 0);
 
   return (
     <motion.div whileHover={{ y: -5 }} className="mp-product-card">
-      <div 
-        className="mp-wishlist-btn" 
+      <div
+        className="mp-wishlist-btn"
         onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
         style={{ color: wishlisted ? '#ff4757' : 'inherit', cursor: 'pointer', zIndex: 10, right: '10px', top: '10px' }}
       >
@@ -63,18 +65,20 @@ const ProductCard = ({ product }) => {
         <div className="mp-product-image-container">
           <LazyLoadImage src={displayImg} alt={product.name} effect="blur" className="mp-product-image" />
         </div>
-        <div className="mp-product-title">{product.name}</div>
-        <div className="mp-product-rating">
-          {product.ratings || '4.0'} ★
-        </div>
-        <div className="mp-product-price-container">
-          <span className="mp-price">₹{product.price}</span>
-          {product.originalPrice && <span className="mp-original-price">₹{product.originalPrice}</span>}
-          {discount > 0 && <span className="mp-discount">{discount}% off</span>}
+        <div className="mp-product-info">
+          <div className="mp-product-title">{product.name}</div>
+          <div className="mp-product-rating">
+            {product.ratings || '4.0'} ★
+          </div>
+          <div className="mp-product-price-container">
+            <span className="mp-price">₹{currentPrice}</span>
+            {originalPrice && <span className="mp-original-price">₹{originalPrice}</span>}
+            {discount > 0 && <span className="mp-discount">{discount}% off</span>}
+          </div>
         </div>
       </Link>
-      <button 
-        className="mp-add-cart-btn" 
+      <button
+        className="mp-add-cart-btn"
         onClick={(e) => { e.preventDefault(); addToCart(product._id, 1); }}
       >
         Add to Cart
@@ -94,9 +98,9 @@ const Home = () => {
     const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
     setRecentlyViewed(recent);
     const fetchData = async () => {
-      try { const featRes = await getFeaturedProductsAPI(); setFeatured(featRes.data); } catch (e) {}
-      try { const catRes = await getCategoriesAPI(); setCategories(catRes.data); } catch (e) {}
-      try { const bannerRes = await getActiveBannersAPI(); if (bannerRes.data?.length > 0) setBanners(bannerRes.data); } catch (e) {}
+      try { const featRes = await getFeaturedProductsAPI(); setFeatured(featRes.data); } catch (e) { }
+      try { const catRes = await getCategoriesAPI(); setCategories(catRes.data); } catch (e) { }
+      try { const bannerRes = await getActiveBannersAPI(); if (bannerRes.data?.length > 0) setBanners(bannerRes.data); } catch (e) { }
       setLoading(false);
     };
     fetchData();
@@ -118,10 +122,10 @@ const Home = () => {
             {banners.map(banner => (
               <SwiperSlide key={banner._id}>
                 <Link to={banner.linkUrl || '#'}>
-                  <img 
-                    src={banner.imageUrl.startsWith('http') ? banner.imageUrl : `http://localhost:5000${banner.imageUrl}`} 
-                    className="mp-hero-slide" 
-                    alt={banner.title} 
+                  <img
+                    src={banner.imageUrl.startsWith('http') ? banner.imageUrl : `http://localhost:5000${banner.imageUrl}`}
+                    className="mp-hero-slide"
+                    alt={banner.title}
                   />
                 </Link>
               </SwiperSlide>
@@ -188,7 +192,13 @@ const Home = () => {
 
           {/* ── BEST SELLERS GRID ──────────────── */}
           {featured.length > 0 && (
-            <div className="mp-section">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mp-section"
+            >
               <div className="mp-section-header">
                 <h2 className="mp-section-title">Best Sellers</h2>
               </div>
@@ -197,7 +207,7 @@ const Home = () => {
                   <ProductCard key={`best-${product._id}`} product={product} />
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ── PROMO BANNER 2 ──────────────── */}
@@ -207,7 +217,13 @@ const Home = () => {
 
           {/* ── TRENDING PRODUCTS ──────────────── */}
           {featured.length > 2 && (
-            <div className="mp-section">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.6 }}
+              className="mp-section"
+            >
               <div className="mp-section-header">
                 <h2 className="mp-section-title">Trending Products</h2>
               </div>
@@ -216,7 +232,7 @@ const Home = () => {
                   <ProductCard key={`trend-${product._id}`} product={product} />
                 ))}
               </div>
-            </div>
+            </motion.div>
           )}
 
           {/* ── RECENTLY VIEWED PRODUCTS ──────────────── */}

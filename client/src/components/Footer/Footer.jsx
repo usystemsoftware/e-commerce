@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import { getPagesAPI } from '../../services/api';
+import { getPagesAPI, subscribeAPI } from '../../services/api';
 import { FiFacebook, FiTwitter, FiInstagram, FiYoutube } from 'react-icons/fi';
-import axios from 'axios';
 import { toast } from 'react-toastify';
 
 const Footer = () => {
@@ -19,7 +18,7 @@ const Footer = () => {
     if (!email) return;
     setSubscribing(true);
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/api/subscribers`, { email });
+      await subscribeAPI({ email });
       toast.success('Subscribed successfully!');
       setEmail('');
     } catch (error) {

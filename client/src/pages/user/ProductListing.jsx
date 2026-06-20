@@ -3,6 +3,7 @@ import { useSearchParams } from 'react-router-dom';
 import { getProductsAPI, getCategoriesAPI } from '../../services/api';
 import ProductCard from '../../components/ProductCard/ProductCard';
 import Spinner from '../../components/Spinner/Spinner';
+import { motion } from 'framer-motion';
 
 const ProductListing = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -91,7 +92,7 @@ const ProductListing = () => {
         <div className="row g-4">
           {/* FILTER SIDEBAR */}
           <div className="col-lg-3">
-            <div className="filter-sidebar">
+            <div className="filter-sidebar" style={{ background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 'var(--mp-radius-lg)', padding: '24px', boxShadow: 'var(--mp-shadow)', position: 'sticky', top: '90px' }}>
               <div className="d-flex justify-content-between align-items-center mb-4">
                 <h5 style={{ fontWeight: 700, margin: 0 }}><i className="bi bi-funnel me-2"></i>Filters</h5>
                 <button onClick={clearFilters} style={{ background: 'none', border: 'none', color: 'var(--danger)', fontSize: '13px', cursor: 'pointer' }}>Clear All</button>
@@ -175,10 +176,16 @@ const ProductListing = () => {
               </div>
             ) : (
               <div className={view === 'grid' ? 'row g-4' : 'd-flex flex-column gap-3'}>
-                {products.map(p => (
-                  <div key={p._id} className={view === 'grid' ? 'col-6 col-md-4' : ''}>
+                {products.map((p, index) => (
+                  <motion.div 
+                    key={p._id} 
+                    className={view === 'grid' ? 'col-6 col-md-4' : ''}
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.4, delay: index * 0.05 }}
+                  >
                     <ProductCard product={p} />
-                  </div>
+                  </motion.div>
                 ))}
               </div>
             )}

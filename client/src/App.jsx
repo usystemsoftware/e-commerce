@@ -44,6 +44,10 @@ import ManageSettings from './pages/admin/ManageSettings';
 import ManageBanners from './pages/admin/ManageBanners';
 import ManageCoupons from './pages/admin/ManageCoupons';
 import ManagePages from './pages/admin/ManagePages';
+import ManageContacts from './pages/admin/ManageContacts';
+import ManageSubscribers from './pages/admin/ManageSubscribers';
+import ManageReviews from './pages/admin/ManageReviews';
+import ContactUs from './pages/user/ContactUs';
 
 // Layout for user-facing pages (with navbar + footer)
 const UserLayout = ({ children }) => (
@@ -79,6 +83,7 @@ function App() {
               <Route path="/products" element={<UserLayout><ProductListing /></UserLayout>} />
               <Route path="/products/:id" element={<UserLayout><ProductDetails /></UserLayout>} />
               <Route path="/page/:slug" element={<UserLayout><DynamicPage /></UserLayout>} />
+              <Route path="/contact" element={<UserLayout><ContactUs /></UserLayout>} />
 
               <Route path="/cart" element={
                 <ProtectedRoute>
@@ -124,6 +129,9 @@ function App() {
               <Route path="/admin/banners" element={<AdminRoute><ManageBanners /></AdminRoute>} />
               <Route path="/admin/coupons" element={<AdminRoute><ManageCoupons /></AdminRoute>} />
               <Route path="/admin/pages" element={<AdminRoute><ManagePages /></AdminRoute>} />
+              <Route path="/admin/contacts" element={<AdminRoute><ManageContacts /></AdminRoute>} />
+              <Route path="/admin/subscribers" element={<AdminRoute><ManageSubscribers /></AdminRoute>} />
+              <Route path="/admin/reviews" element={<AdminRoute><ManageReviews /></AdminRoute>} />
 
               {/* 404 */}
               <Route path="*" element={

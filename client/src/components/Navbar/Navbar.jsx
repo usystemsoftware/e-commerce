@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
@@ -24,9 +24,17 @@ const Navbar = () => {
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
 
+  useEffect(() => {
+    setKeyword(searchParams.get('keyword') || '');
+  }, [searchParams]);
+
   const handleSearch = (e) => {
     e.preventDefault();
-    if (keyword.trim()) navigate(`/products?keyword=${keyword.trim()}`);
+    if (keyword.trim()) {
+      navigate(`/products?keyword=${keyword.trim()}`);
+    } else {
+      navigate('/products');
+    }
   };
 
   const handleLogout = () => {

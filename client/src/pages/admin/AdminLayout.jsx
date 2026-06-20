@@ -4,15 +4,18 @@ import { toast } from 'react-toastify';
 
 const navItems = [
   { path: '/admin/dashboard', icon: 'bi-grid', label: 'Dashboard' },
+  { path: '/admin/orders', icon: 'bi-receipt', label: 'Orders' },
   { path: '/admin/products', icon: 'bi-box-seam', label: 'Products' },
   { path: '/admin/categories', icon: 'bi-tag', label: 'Categories' },
-  { path: '/admin/orders', icon: 'bi-receipt', label: 'Orders' },
-  { path: '/admin/users', icon: 'bi-people', label: 'Users' },
   { path: '/admin/stock', icon: 'bi-bar-chart', label: 'Stock' },
-  { path: '/admin/settings', icon: 'bi-gear', label: 'Settings' },
+  { path: '/admin/users', icon: 'bi-people', label: 'Users' },
+  { path: '/admin/reviews', icon: 'bi-star', label: 'Reviews' },
+  { path: '/admin/contacts', icon: 'bi-envelope', label: 'Contacts' },
+  { path: '/admin/subscribers', icon: 'bi-envelope-paper', label: 'Subscribers' },
   { path: '/admin/banners', icon: 'bi-images', label: 'Banners' },
   { path: '/admin/coupons', icon: 'bi-ticket-perforated', label: 'Coupons' },
   { path: '/admin/pages', icon: 'bi-file-earmark-text', label: 'Pages' },
+  { path: '/admin/settings', icon: 'bi-gear', label: 'Settings' },
 ];
 
 const AdminLayout = ({ children }) => {
@@ -33,7 +36,7 @@ const AdminLayout = ({ children }) => {
           <span className="gradient-text"><i className="bi bi-shield-lock-fill me-2"></i>ShopZone</span>
           <div style={{ fontSize: '11px', color: 'var(--admin-text-muted)', fontWeight: 500, marginTop: '4px', letterSpacing: '1px', textTransform: 'uppercase' }}>Admin Panel</div>
         </div>
-        <div style={{ padding: '20px 0' }}>
+        <div style={{ padding: '20px 0 110px 0' }}>
           {navItems.map(item => (
             <div key={item.path} className="nav-item">
               <Link to={item.path} className={location.pathname === item.path ? 'active' : ''}>

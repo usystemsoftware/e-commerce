@@ -88,8 +88,8 @@ const ManageOrders = () => {
                       <div style={{ fontSize: '11px', color: 'var(--text-muted)' }}>{new Date(order.createdAt).toLocaleDateString('en-IN')}</div>
                     </td>
                     <td>
-                      <div style={{ fontSize: '14px', fontWeight: 500 }}>{order.user?.name}</div>
-                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{order.user?.email}</div>
+                      <div style={{ fontSize: '14px', fontWeight: 500 }}>{order.user?.name || 'Guest / Deleted User'}</div>
+                      <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{order.user?.email || 'N/A'}</div>
                     </td>
                     <td style={{ fontSize: '14px' }}>{order.items?.length} item(s)</td>
                     <td style={{ fontWeight: 700 }}>₹{order.totalAmount?.toLocaleString()}</td>

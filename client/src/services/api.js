@@ -103,4 +103,18 @@ export const createPageAPI = (data) => API.post('/pages', data);
 export const updatePageAPI = (id, data) => API.put(`/pages/${id}`, data);
 export const deletePageAPI = (id) => API.delete(`/pages/${id}`);
 
+// Contacts
+export const submitContactAPI = (data) => API.post('/contact', data);
+export const getContactsAPI = () => API.get('/contact');
+export const updateContactStatusAPI = (id, status) => API.put(`/contact/${id}/status`, { status });
+export const deleteContactAPI = (id) => API.delete(`/contact/${id}`);
+
+// Subscribers
+export const getSubscribersAPI = () => API.get('/subscribers');
+export const deleteSubscriberAPI = (id) => API.delete(`/subscribers/${id}`);
+
+// Admin Reviews
+export const getAdminReviewsAPI = () => API.get('/products/admin/reviews');
+export const deleteAdminReviewAPI = (productId, reviewId) => API.delete(`/products/${productId}/reviews/${reviewId}`);
+
 export default API;

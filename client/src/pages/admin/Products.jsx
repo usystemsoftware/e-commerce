@@ -27,7 +27,12 @@ const Products = () => {
     } catch { toast.error('Failed to delete'); } finally { setDeleting(null); }
   };
 
-  const filtered = products.filter(p => p.name.toLowerCase().includes(search.toLowerCase()) || p.brand?.toLowerCase().includes(search.toLowerCase()));
+  const filtered = products.filter(p => 
+    p.name.toLowerCase().includes(search.toLowerCase()) || 
+    p.brand?.toLowerCase().includes(search.toLowerCase()) ||
+    p.description?.toLowerCase().includes(search.toLowerCase()) ||
+    p.category?.name?.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
     <AdminLayout>
@@ -58,7 +63,7 @@ const Products = () => {
                       <img src={p.images?.[0] || `https://picsum.photos/seed/${p._id}/60/60`} style={{ width: '44px', height: '44px', borderRadius: 'var(--radius-sm)', objectFit: 'cover' }} alt="" />
                       <div>
                         <div style={{ fontWeight: 600, fontSize: '14px', color: 'var(--text-primary)' }}>{p.name}</div>
-                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{p.brand}</div>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{p.brand || 'No Brand'}</div>
                       </div>
                     </div>
                   </td>

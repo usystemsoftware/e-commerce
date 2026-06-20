@@ -185,7 +185,7 @@ const ProductDetails = () => {
                 color: activeTab === tab ? 'var(--primary-light)' : 'var(--text-muted)',
                 padding: '8px 20px', borderRadius: '50px', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '14px'
               }}>
-                {tab.charAt(0).toUpperCase() + tab.slice(1)} {tab === 'reviews' && `(${product.numReviews})`}
+                {tab.charAt(0).toUpperCase() + tab.slice(1)} {tab === 'reviews' && `(${product.reviews?.length || 0})`}
               </button>
             ))}
           </div>
@@ -201,7 +201,7 @@ const ProductDetails = () => {
             </div>
           ) : (
             <div>
-              {product.reviews?.map(r => (
+              {product.reviews?.length > 0 ? product.reviews.map(r => (
                 <div key={r._id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '16px', marginBottom: '12px' }}>
                   <div className="d-flex justify-content-between mb-2">
                     <div>
@@ -212,7 +212,11 @@ const ProductDetails = () => {
                   </div>
                   <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '14px' }}>{r.comment}</p>
                 </div>
-              ))}
+              )) : (
+                <div style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)', background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
+                  No customer reviews yet. Be the first to review!
+                </div>
+              )}
               {user && (
                 <form onSubmit={handleReview} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '24px', marginTop: '20px' }}>
                   <h5 style={{ fontWeight: 700, marginBottom: '16px' }}>Write a Review</h5>

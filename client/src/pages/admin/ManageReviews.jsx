@@ -64,7 +64,7 @@ const ManageReviews = () => {
                 <tr key={review._id}>
                   <td>{new Date(review.createdAt).toLocaleDateString()}</td>
                   <td>
-                    <Link to={`/product/${review.productId}`} target="_blank" className="text-decoration-none">
+                    <Link to={`/products/${review.productId}`} target="_blank" className="text-decoration-none">
                       {review.productName}
                     </Link>
                   </td>

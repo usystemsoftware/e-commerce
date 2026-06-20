@@ -1,11 +1,14 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
+import { useCompare } from '../../context/CompareContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
+  const { addToCompare, compareItems } = useCompare();
   const wishlisted = isWishlisted(product._id);
+  const isCompared = compareItems?.some(p => p._id === product._id);
 
   const currentPrice = product.discountPrice > 0 ? product.discountPrice : product.price;
   const discountPercent = product.discountPercent || (product.discountPrice > 0
@@ -32,6 +35,13 @@ const ProductCard = ({ product }) => {
             title="Wishlist"
           >
             <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? '#ff4757' : '#555' }}></i>
+          </button>
+          <button 
+            className="alibaba-quick-btn" 
+            onClick={() => !isCompared && addToCompare(product)}
+            title="Compare"
+          >
+            <i className="bi bi-layers" style={{ color: isCompared ? 'var(--primary)' : '#555' }}></i>
           </button>
           <button 
             className="alibaba-quick-btn" 

@@ -12,6 +12,18 @@ const getAllCoupons = async (req, res) => {
   }
 };
 
+// @desc    Get all active coupons (Public/User)
+// @route   GET /api/coupons/active
+// @access  Public
+const getActiveCoupons = async (req, res) => {
+  try {
+    const coupons = await Coupon.find({ isActive: true, expiryDate: { $gt: new Date() } }).select('-usedCount -usageLimit');
+    res.json(coupons);
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to fetch active coupons', error: error.message });
+  }
+};
+
 // @desc    Create a coupon
 // @route   POST /api/coupons
 // @access  Private/Admin
@@ -90,6 +102,7 @@ const validateCoupon = async (req, res) => {
 
 module.exports = {
   getAllCoupons,
+  getActiveCoupons,
   createCoupon,
   updateCoupon,
   deleteCoupon,

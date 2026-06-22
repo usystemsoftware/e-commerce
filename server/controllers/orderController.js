@@ -15,6 +15,11 @@ const placeOrder = asyncHandler(async (req, res) => {
     res.status(400); throw new Error('Cart is empty');
   }
 
+  cart.items = cart.items.filter(i => i.product != null);
+  if (cart.items.length === 0) {
+    res.status(400); throw new Error('Cart only contains unavailable items');
+  }
+
   // Check stock
   for (const item of cart.items) {
     if (item.product.stock < item.quantity) {

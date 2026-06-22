@@ -94,6 +94,7 @@ export const updateBannerAPI = (id, data) => API.put(`/banners/${id}`, data);
 export const deleteBannerAPI = (id) => API.delete(`/banners/${id}`);
 
 // Coupons
+export const getActiveCouponsAPI = () => API.get('/coupons/active');
 export const getAllCouponsAPI = () => API.get('/coupons');
 export const createCouponAPI = (data) => API.post('/coupons', data);
 export const updateCouponAPI = (id, data) => API.put(`/coupons/${id}`, data);

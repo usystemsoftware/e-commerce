@@ -18,7 +18,7 @@ const loadScript = (src) => {
 const steps = ['Address', 'Payment', 'Confirm'];
 
 const Checkout = () => {
-  const { cart, clearCart } = useCart();
+  const { cart, appliedCoupon, setAppliedCoupon, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -26,12 +26,11 @@ const Checkout = () => {
   const [address, setAddress] = useState({ fullName: user?.name || '', phone: '', street: '', city: '', state: '', pincode: '' });
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '', name: '' });
-  const [couponCodeInput, setCouponCodeInput] = useState('');
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [couponCodeInput, setCouponCodeInput] = useState(appliedCoupon ? appliedCoupon.code : '');
   const [discount, setDiscount] = useState(0);
   const [useSuperCoins, setUseSuperCoins] = useState(false);
 
-  const items = cart.items || [];
+  const items = (cart.items || []).filter(i => i.product != null);
   const subtotal = items.reduce((a, i) => a + i.price * i.quantity, 0);
   
   // Recalculate based on discount

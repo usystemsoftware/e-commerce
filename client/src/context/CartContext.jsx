@@ -8,6 +8,7 @@ const CartContext = createContext();
 export const CartProvider = ({ children }) => {
   const [cart, setCart] = useState({ items: [], totalAmount: 0 });
   const [loading, setLoading] = useState(false);
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
   const { user } = useAuth();
 
   const fetchCart = async () => {
@@ -44,8 +45,8 @@ export const CartProvider = ({ children }) => {
       await removeFromCartAPI(productId);
       setCart(prev => ({
         ...prev,
-        items: prev.items.filter(i => i.product._id !== productId),
-        totalAmount: prev.items.filter(i => i.product._id !== productId).reduce((a, i) => a + i.price * i.quantity, 0),
+        items: prev.items.filter(i => i.product && i.product._id !== productId),
+        totalAmount: prev.items.filter(i => i.product && i.product._id !== productId).reduce((a, i) => a + i.price * i.quantity, 0),
       }));
       toast.success('Removed from cart');
     } catch (err) { toast.error('Failed to remove'); }
@@ -61,7 +62,7 @@ export const CartProvider = ({ children }) => {
   const cartCount = cart.items?.reduce((a, i) => a + i.quantity, 0) || 0;
 
   return (
-    <CartContext.Provider value={{ cart, loading, cartCount, addToCart, updateQuantity, removeFromCart, clearCart, fetchCart }}>
+    <CartContext.Provider value={{ cart, loading, cartCount, appliedCoupon, setAppliedCoupon, addToCart, updateQuantity, removeFromCart, clearCart, fetchCart }}>
       {children}
     </CartContext.Provider>
   );

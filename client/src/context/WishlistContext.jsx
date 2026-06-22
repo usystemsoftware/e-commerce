@@ -33,7 +33,7 @@ export const WishlistProvider = ({ children }) => {
   const removeFromWishlist = async (productId) => {
     try {
       await removeFromWishlistAPI(productId);
-      setWishlist(prev => ({ ...prev, products: prev.products.filter(p => p._id !== productId) }));
+      setWishlist(prev => ({ ...prev, products: prev.products.filter(p => p && p._id !== productId) }));
       toast.success('Removed from wishlist');
     } catch (err) { toast.error('Failed to remove'); }
   };

@@ -3,7 +3,7 @@ import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
-import { validateCouponAPI, getActiveCouponsAPI } from '../../services/api';
+import { validateCouponAPI, getActiveCouponsAPI, getProductsAPI } from '../../services/api';
 import { toast } from 'react-toastify';
 
 const Cart = () => {
@@ -17,6 +17,7 @@ const Cart = () => {
   
   const [couponCodeInput, setCouponCodeInput] = useState(appliedCoupon ? appliedCoupon.code : '');
   const [availableCoupons, setAvailableCoupons] = useState([]);
+  const [recommendations, setRecommendations] = useState([]);
   
   useEffect(() => {
     const fetchCoupons = async () => {
@@ -27,7 +28,18 @@ const Cart = () => {
         console.error('Failed to fetch coupons');
       }
     };
+    
+    const fetchRecommendations = async () => {
+      try {
+        const { data } = await getProductsAPI({ limit: 4 });
+        setRecommendations(data.products || data);
+      } catch (err) {
+        console.error('Failed to fetch recommendations');
+      }
+    };
+    
     fetchCoupons();
+    fetchRecommendations();
   }, []);
   
   const subtotal = validItems.reduce((a, i) => a + i.price * i.quantity, 0);
@@ -74,12 +86,31 @@ const Cart = () => {
 
   if (validItems.length === 0) return (
     <div className="container py-5">
-      <div className="empty-state">
+      <div className="empty-cart-enhanced">
         <i className="bi bi-bag-x"></i>
         <h3>Your Cart is Empty</h3>
-        <p>Add some products to get started!</p>
-        <Link to="/products" className="btn-primary-custom">Shop Now <i className="bi bi-arrow-right"></i></Link>
+        <p>Looks like you haven't added anything yet. Explore our top products!</p>
+        <Link to="/products" className="btn-primary-custom px-4 py-2" style={{ display: 'inline-block' }}>Shop Now <i className="bi bi-arrow-right"></i></Link>
       </div>
+      
+      {recommendations && recommendations.length > 0 && (
+        <div className="recommendations-wrapper">
+          <h4 className="recommendations-title"><i className="bi bi-stars text-warning"></i> Trending Products</h4>
+          <div className="mp-product-grid">
+            {recommendations.slice(0, 4).map(product => (
+              <Link to={`/products/${product._id}`} key={product._id} className="mp-product-card" style={{ textDecoration: 'none' }}>
+                <div className="mp-product-image-container" style={{ height: '180px' }}>
+                  <img src={product.images?.[0] || `https://picsum.photos/seed/${product._id}/150/150`} alt={product.name} className="mp-product-image" style={{ height: '180px' }} />
+                </div>
+                <div className="mp-product-info" style={{ padding: '15px' }}>
+                  <h5 className="mp-product-title" style={{ fontSize: '14px', marginBottom: '8px' }}>{product.name}</h5>
+                  <div className="mp-price" style={{ fontSize: '16px' }}>₹{product.price.toLocaleString()}</div>
+                </div>
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 
@@ -149,6 +180,25 @@ const Cart = () => {
             <div className="mt-4">
               <Link to="/products" style={{ color: 'var(--primary-light)', fontSize: '14px', textDecoration: 'none', fontWeight: 600 }}><i className="bi bi-arrow-left me-1"></i>Continue Shopping</Link>
             </div>
+            
+            {recommendations && recommendations.length > 0 && (
+              <div className="recommendations-wrapper">
+                <h4 className="recommendations-title"><i className="bi bi-bag-plus"></i> You Might Also Like</h4>
+                <div className="mp-product-grid" style={{ gridTemplateColumns: 'repeat(3, 1fr)' }}>
+                  {recommendations.slice(0, 3).map(product => (
+                    <Link to={`/products/${product._id}`} key={product._id} className="mp-product-card" style={{ textDecoration: 'none' }}>
+                      <div className="mp-product-image-container" style={{ height: '160px' }}>
+                        <img src={product.images?.[0] || `https://picsum.photos/seed/${product._id}/150/150`} alt={product.name} className="mp-product-image" style={{ height: '160px' }} />
+                      </div>
+                      <div className="mp-product-info" style={{ padding: '12px' }}>
+                        <h5 className="mp-product-title" style={{ fontSize: '13px', marginBottom: '6px' }}>{product.name}</h5>
+                        <div className="mp-price" style={{ fontSize: '15px' }}>₹{product.price.toLocaleString()}</div>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           <div className="col-lg-4">
             <div className="card-custom" style={{ position: 'sticky', top: '90px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 'var(--mp-radius-lg)', padding: '24px', boxShadow: 'var(--mp-shadow)' }}>
@@ -211,6 +261,12 @@ const Cart = () => {
                   <span>Total</span>
                   <span className="gradient-text">₹{total.toLocaleString()}</span>
                 </div>
+                {total > 0 && (
+                  <div className="loyalty-badge w-100 justify-content-center mt-3">
+                    <i className="bi bi-star-fill text-warning"></i>
+                    Earn {Math.floor(total / 100)} Reward Points
+                  </div>
+                )}
               </div>
               
               {hasOutOfStockItems ? (

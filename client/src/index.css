@@ -1,10 +1,11 @@
 /* ===== SHOPZONE GLOBAL STYLES ===== */
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
 
 :root {
-  --primary: #6c3ef4;
-  --primary-dark: #5429d6;
-  --primary-light: #8b5cf6;
+  --primary: #b32a3f;
+  --primary-dark: #8b1e30;
+  --primary-light: #d13a52;
   --secondary: #f97316;
   --accent: #06b6d4;
   --success: #10b981;
@@ -1340,17 +1341,15 @@ a:hover {
    NEO-BRUTALIST SHOPZONE THEME
    ========================================================= */
 
-@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap');
-
 :root {
   --ink: #0a0a0a;
   --ink-2: #1a1a1a;
   --ink-3: #2e2e2e;
-  --chalk: #f5f3ee;
+  --chalk: #ffffff;
   --chalk-2: #eceae4;
   --chalk-3: #e0ddd6;
-  --acid: #c8ff00;
-  --acid-dim: #a3d600;
+  --acid: #b32a3f;
+  --acid-dim: #8b1e30;
   --hot: #ff3c5a;
   --sky: #00c2ff;
   --gold: #ffb800;
@@ -1573,7 +1572,22 @@ body {
   font-family: var(--font-display);
   font-size: 0.9rem;
   letter-spacing: 2px;
+  color: var(--chalk);
 }
+
+/* Light mode overrides for Navbar */
+.nav-neo.light-mode {
+  background: #ffffff;
+  border-bottom: 2px solid #eaeaea;
+}
+.nav-neo.light-mode .nav-neo-logo { color: var(--ink); }
+.nav-neo.light-mode .nav-neo-search { background: #f5f5f5; border-color: #e0e0e0; }
+.nav-neo.light-mode .nav-neo-search input { color: var(--ink); }
+.nav-neo.light-mode .nav-neo-search input::placeholder,
+.nav-neo.light-mode .nav-neo-search svg { color: #777; }
+.nav-neo.light-mode .nav-neo-btn { background: #f5f5f5; border-color: #e0e0e0; color: var(--ink); }
+.nav-neo.light-mode .nav-neo-sign { color: var(--ink); }
+.nav-neo.light-mode .nav-neo-btn:hover { border-color: var(--acid); color: var(--acid); }
 
 .category-link {
   color: var(--muted);
@@ -1638,7 +1652,7 @@ body {
 
 /* ── HERO ──────────────────────────────── */
 .hero-neo {
-  background: var(--ink);
+  background: #ffffff;
   min-height: calc(100vh - 64px);
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -1678,7 +1692,7 @@ body {
   font-family: var(--font-display);
   font-size: clamp(5rem, 10vw, 9rem);
   line-height: 0.9;
-  color: var(--chalk);
+  color: var(--ink);
   letter-spacing: 2px;
   margin-bottom: 32px;
 }
@@ -1733,7 +1747,7 @@ body {
 .hero-neo-stat-val {
   font-family: var(--font-display);
   font-size: 2.2rem;
-  color: var(--chalk);
+  color: var(--ink);
   line-height: 1;
 }
 
@@ -1753,21 +1767,21 @@ body {
 .hero-neo-right {
   position: relative;
   overflow: hidden;
-  background: var(--ink-2);
+  background: transparent;
 }
 
 .hero-neo-img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  opacity: 0.65;
+  opacity: 1;
   transition: opacity 0.5s;
 }
 
 .hero-neo-img-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(90deg, var(--ink) 0%, transparent 40%);
+  background: linear-gradient(90deg, #ffffff 0%, transparent 40%);
   pointer-events: none;
 }
 
@@ -2572,4 +2586,184 @@ body {
   .newsletter-neo {
     padding: 48px 24px;
   }
+}
+
+/* ===== FLIPKART STYLE PRODUCT CARD ===== */
+.product-card-flip {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--dark-2);
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow 0.2s ease;
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid var(--border);
+  height: 100%;
+}
+
+.product-card-flip:hover {
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.product-flip-img-wrap {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 3/4;
+  overflow: hidden;
+  background: var(--dark-3);
+}
+
+.product-flip-img-wrap a {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.product-flip-img-wrap img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.product-card-flip:hover .product-flip-img-wrap img {
+  transform: scale(1.03);
+}
+
+.product-flip-rating {
+  position: absolute;
+  bottom: 8px;
+  left: 8px;
+  background: rgba(255, 255, 255, 0.95);
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--text-primary);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+}
+
+.product-flip-rating i {
+  color: var(--primary);
+  font-size: 10px;
+}
+
+.product-flip-rating .rating-count {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.product-flip-body {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-grow: 1;
+}
+
+.product-flip-title-row {
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.product-flip-brand {
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-right: 6px;
+}
+
+.product-flip-name {
+  color: var(--text-muted);
+}
+
+.product-flip-price-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 2px;
+}
+
+.product-flip-price-old {
+  color: var(--text-muted);
+  text-decoration: line-through;
+  font-size: 14px;
+}
+
+.product-flip-price-new {
+  color: var(--text-primary);
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.product-flip-offer {
+  color: var(--primary-light);
+  font-size: 12px;
+  font-weight: 500;
+  margin-top: 2px;
+}
+
+.product-flip-wishlist {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  background: rgba(255,255,255,0.9);
+  border: none;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  z-index: 2;
+  transition: all 0.2s ease;
+}
+
+.product-flip-wishlist:hover {
+  background: #fff;
+  transform: scale(1.1);
+}
+
+.product-flip-wishlist i {
+  font-size: 14px;
+}
+
+.product-flip-add {
+  margin-top: 8px;
+  background: var(--gradient-primary);
+  color: white;
+  border: none;
+  padding: 8px 0;
+  border-radius: 4px;
+  font-weight: 600;
+  font-size: 13px;
+  cursor: pointer;
+  opacity: 0;
+  transition: all 0.2s ease;
+  width: 100%;
+}
+
+.product-card-flip:hover .product-flip-add {
+  opacity: 1;
+}
+
+.product-flip-add:disabled {
+  background: var(--dark-3);
+  color: var(--text-muted);
+  cursor: not-allowed;
+}
+
+.product-card-flip .text-decoration-none {
+  text-decoration: none;
+  color: inherit;
 }

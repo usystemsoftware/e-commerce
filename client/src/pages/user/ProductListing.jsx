@@ -74,20 +74,9 @@ const ProductListing = () => {
 
   return (
     <div>
-      <div className="page-header">
-        <div className="container">
-          <h1>
-            {filters.keyword 
-              ? `Results for "${filters.keyword}"` 
-              : filters.category 
-                ? (categories.find(c => c._id === filters.category || c.slug === filters.category)?.name || 'Products')
-                : 'All Products'}
-          </h1>
-          <p>{total} products found</p>
-        </div>
-      </div>
 
-      <div className="container pb-5">
+
+      <div className="container pb-5 mt-4">
         <div className="row g-4">
           {/* FILTER SIDEBAR */}
           <div className="col-lg-3">

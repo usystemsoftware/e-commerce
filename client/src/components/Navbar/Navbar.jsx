@@ -1,4 +1,4 @@
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
@@ -12,6 +12,8 @@ const Navbar = () => {
   const [searchParams] = useSearchParams();
   const [keyword, setKeyword] = useState(searchParams.get('keyword') || '');
   const [menuOpen, setMenuOpen] = useState(false);
+  const location = useLocation();
+  const isHome = location.pathname === '/';
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -25,7 +27,7 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="nav-neo">
+      <nav className={`nav-neo ${!isHome ? 'light-mode' : ''}`}>
         <Link to="/" className="nav-neo-logo">SHOP<span>ZONE</span></Link>
         <form onSubmit={handleSearch} className="nav-neo-search" style={{ margin: 0 }}>
           <input 
@@ -41,7 +43,7 @@ const Navbar = () => {
         <div className="nav-neo-actions">
           {user ? (
             <div className="dropdown">
-              <div className="nav-neo-sign" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px', color: 'var(--chalk)' }} data-bs-toggle="dropdown">
+              <div className="nav-neo-sign" style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '8px' }} data-bs-toggle="dropdown">
                 {user.name?.split(' ')[0].toUpperCase()} / <i className="bi bi-chevron-down" style={{ fontSize: '12px' }}></i>
               </div>
               <ul className="dropdown-menu dropdown-menu-end" style={{ background: 'var(--ink)', border: '2px solid var(--ink-3)', borderRadius: 0, marginTop: '10px' }}>
@@ -55,7 +57,7 @@ const Navbar = () => {
               </ul>
             </div>
           ) : (
-            <Link to="/login" className="nav-neo-sign text-decoration-none" style={{ color: 'var(--chalk)' }}>SIGN IN /</Link>
+            <Link to="/login" className="nav-neo-sign text-decoration-none">SIGN IN /</Link>
           )}
 
           <Link to="/wishlist" className="nav-neo-btn">
@@ -70,7 +72,7 @@ const Navbar = () => {
       </nav>
       
       {/* Category nav */}
-      <div style={{ background: 'var(--ink-2)', borderBottom: '2px solid var(--ink)', padding: '10px 48px', display: 'flex', gap: '24px', flexWrap: 'wrap', overflowX: 'auto' }}>
+      <div style={{ background: isHome ? 'var(--ink-2)' : '#ffffff', borderBottom: isHome ? '2px solid var(--ink)' : '1px solid #eaeaea', padding: '10px 48px', display: 'flex', gap: '24px', flexWrap: 'wrap', overflowX: 'auto' }}>
         <Link to="/products" className={`category-link ${!searchParams.get('category') ? 'active' : ''}`}>All Products</Link>
         <Link to="/products?category=electronics" className={`category-link ${searchParams.get('category') === 'electronics' ? 'active' : ''}`}>Electronics</Link>
         <Link to="/products?category=fashion" className={`category-link ${searchParams.get('category') === 'fashion' ? 'active' : ''}`}>Fashion</Link>

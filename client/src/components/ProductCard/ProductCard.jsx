@@ -1,90 +1,75 @@
 import { Link } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
-import { useCompare } from '../../context/CompareContext';
 
 const ProductCard = ({ product }) => {
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
-  const { addToCompare, compareItems } = useCompare();
   const wishlisted = isWishlisted(product._id);
-  const isCompared = compareItems?.some(p => p._id === product._id);
 
   const currentPrice = product.discountPrice > 0 ? product.discountPrice : product.price;
-  const discountPercent = product.discountPercent || (product.discountPrice > 0
-    ? Math.round(((product.price - product.discountPrice) / product.price) * 100) : 0);
-
-  // Simulated data for Alibaba style
-  const soldCount = (product.numReviews || 0) * 10 + Math.floor(Math.random() * 50) + 10;
-  const supplierYears = Math.floor(Math.random() * 10) + 1;
+  
+  // Dummy logic for 'Bank offer' text to replicate screenshot
+  const offerText = `₹${Math.max(Math.floor(currentPrice * 0.93), currentPrice - 50).toLocaleString()} with Bank offer + more`;
 
   return (
-    <div className="alibaba-card">
-      <div className="alibaba-card-img-wrap">
+    <div className="product-card-flip">
+      <div className="product-flip-img-wrap">
         <Link to={`/products/${product._id}`}>
           <img
-            src={product.images?.[0] ? product.images[0] : `https://picsum.photos/seed/${product._id}/400/400`}
+            src={product.images?.[0] ? product.images[0] : `https://picsum.photos/seed/${product._id}/400/300`}
             alt={product.name}
             loading="lazy"
           />
         </Link>
-        <div className="alibaba-quick-actions">
-          <button 
-            className="alibaba-quick-btn" 
-            onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
-            title="Wishlist"
-          >
-            <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? '#ff4757' : '#555' }}></i>
-          </button>
-          <button 
-            className="alibaba-quick-btn" 
-            onClick={() => !isCompared && addToCompare(product)}
-            title="Compare"
-          >
-            <i className="bi bi-layers" style={{ color: isCompared ? 'var(--primary)' : '#555' }}></i>
-          </button>
-          <button 
-            className="alibaba-quick-btn" 
-            onClick={() => addToCart(product._id, 1)}
-            disabled={product.stock === 0}
-            title="Add to cart"
-          >
-            <i className="bi bi-cart-plus"></i>
-          </button>
+        <div className="product-flip-rating">
+          <span>{product.ratings ? Number(product.ratings).toFixed(1) : "4.0"} <i className="bi bi-star-fill"></i></span>
+          <span className="rating-count">({(product.numReviews || 0).toLocaleString()})</span>
         </div>
       </div>
-      <div className="alibaba-card-body">
-        <Link to={`/products/${product._id}`} className="alibaba-card-title">
-          {product.name}
-        </Link>
-        
-        <div className="alibaba-badge-row">
-          {discountPercent > 0 ? (
-            <span className="alibaba-badge text-danger">
-              <i className="bi bi-graph-down-arrow"></i> Lower priced than similar
-            </span>
+      
+      <div className="product-flip-body">
+        <div className="product-flip-title-row">
+          <span className="product-flip-brand">{product.brand || 'Brand'}</span>
+          <span className="product-flip-name">{product.name}</span>
+        </div>
+        <div className="product-flip-price-row">
+          {product.discountPrice > 0 ? (
+            <>
+              <span className="product-flip-price-old">₹{product.price.toLocaleString()}</span>
+              <span className="product-flip-price-new">₹{product.discountPrice.toLocaleString()}</span>
+            </>
           ) : (
-            <span className="alibaba-badge text-success">
-              <i className="bi bi-truck"></i> Ready to ship
-            </span>
+            <span className="product-flip-price-new">₹{product.price.toLocaleString()}</span>
           )}
         </div>
-
-        <div className="alibaba-card-price">
-          ₹{currentPrice.toLocaleString()}
-          {product.discountPrice > 0 && <span className="alibaba-old-price">₹{product.price.toLocaleString()}</span>}
-        </div>
-
-        <div className="alibaba-card-meta">
-          <span className="moq-text">MOQ: {product.stock > 0 ? '1 piece' : 'Out of stock'}</span>
-          <span className="sold-count">{soldCount.toLocaleString()} sold</span>
-        </div>
-
-        <div className="alibaba-card-supplier">
-          <span className="verified-badge"><i className="bi bi-patch-check-fill"></i> Verified</span>
-          <span className="supplier-info">· {supplierYears} yrs · IN</span>
+        <div className="product-flip-offer">
+          {offerText}
         </div>
       </div>
+      
+      <button 
+        className="product-flip-wishlist"
+        onClick={(e) => {
+          e.preventDefault();
+          wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id);
+        }}
+        title={wishlisted ? 'Remove from wishlist' : 'Add to wishlist'}
+      >
+        <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`} style={{ color: wishlisted ? '#ff4343' : '#c2c2c2' }}></i>
+      </button>
+
+      {/* Hidden button that appears on hover to maintain functionality */}
+      <button 
+        className="product-flip-add" 
+        onClick={(e) => {
+          e.preventDefault();
+          addToCart(product._id, 1);
+        }}
+        disabled={product.stock === 0}
+      >
+        {product.stock === 0 ? 'OUT OF STOCK' : 'ADD TO CART'}
+      </button>
     </div>
   );
 };

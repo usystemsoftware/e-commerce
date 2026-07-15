@@ -5,7 +5,7 @@ import { useCart } from '../../context/CartContext';
 const Wishlist = () => {
   const { wishlist, removeFromWishlist } = useWishlist();
   const { addToCart } = useCart();
-  const products = (wishlist.products || []).filter(p => p != null);
+  const products = wishlist.products || [];
 
   if (products.length === 0) return (
     <div className="container py-5">

@@ -2,23 +2,13 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import { useAuth } from '../../context/AuthContext';
-import { placeOrderAPI, validateCouponAPI, createRazorpayOrderAPI, verifyRazorpayPaymentAPI } from '../../services/api';
+import { placeOrderAPI } from '../../services/api';
 import { toast } from 'react-toastify';
-
-const loadScript = (src) => {
-  return new Promise((resolve) => {
-    const script = document.createElement('script');
-    script.src = src;
-    script.onload = () => resolve(true);
-    script.onerror = () => resolve(false);
-    document.body.appendChild(script);
-  });
-};
 
 const steps = ['Address', 'Payment', 'Confirm'];
 
 const Checkout = () => {
-  const { cart, appliedCoupon, setAppliedCoupon, clearCart } = useCart();
+  const { cart, clearCart } = useCart();
   const { user } = useAuth();
   const navigate = useNavigate();
   const [step, setStep] = useState(0);
@@ -26,42 +16,12 @@ const Checkout = () => {
   const [address, setAddress] = useState({ fullName: user?.name || '', phone: '', street: '', city: '', state: '', pincode: '' });
   const [paymentMethod, setPaymentMethod] = useState('COD');
   const [cardDetails, setCardDetails] = useState({ number: '', expiry: '', cvv: '', name: '' });
-  const [couponCodeInput, setCouponCodeInput] = useState(appliedCoupon ? appliedCoupon.code : '');
-  const [discount, setDiscount] = useState(0);
-  const [useSuperCoins, setUseSuperCoins] = useState(false);
 
-  const items = (cart.items || []).filter(i => i.product != null);
+  const items = cart.items || [];
   const subtotal = items.reduce((a, i) => a + i.price * i.quantity, 0);
-  
-  // Recalculate based on discount
-  let calculatedDiscount = 0;
-  if (appliedCoupon) {
-    if (appliedCoupon.discountType === 'percentage') {
-      calculatedDiscount = (subtotal * appliedCoupon.discountValue) / 100;
-    } else {
-      calculatedDiscount = appliedCoupon.discountValue;
-    }
-  }
-
   const shipping = subtotal > 499 ? 0 : 49;
-  const tax = parseFloat((0.05 * (subtotal - calculatedDiscount)).toFixed(2));
-  const preCoinsTotal = subtotal - calculatedDiscount + shipping + tax;
-  const maxCoinsUsable = Math.min(user?.superCoins || 0, Math.floor(preCoinsTotal));
-  const coinsDiscount = useSuperCoins ? maxCoinsUsable : 0;
-  const total = preCoinsTotal - coinsDiscount;
-
-  const handleApplyCoupon = async () => {
-    if (!couponCodeInput.trim()) return;
-    try {
-      const { data } = await validateCouponAPI({ code: couponCodeInput });
-      setAppliedCoupon(data);
-      setDiscount(calculatedDiscount);
-      toast.success('Coupon applied!');
-    } catch (err) {
-      toast.error(err.response?.data?.message || 'Invalid coupon');
-      setAppliedCoupon(null);
-    }
-  };
+  const tax = parseFloat((subtotal * 0.05).toFixed(2));
+  const total = subtotal + shipping + tax;
 
   const handleAddressSubmit = (e) => { e.preventDefault(); setStep(1); };
   const handlePaymentSubmit = (e) => { e.preventDefault(); setStep(2); };
@@ -69,72 +29,13 @@ const Checkout = () => {
   const handlePlaceOrder = async () => {
     setPlacing(true);
     try {
-      const { data: order } = await placeOrderAPI({ 
-        shippingAddress: address, 
-        paymentMethod: paymentMethod === 'Card' || paymentMethod === 'UPI' ? 'Card' : paymentMethod,
-        couponCode: appliedCoupon?.code,
-        superCoinsToUse: coinsDiscount
-      });
-
-      if (paymentMethod === 'Card' || paymentMethod === 'UPI') {
-        const res = await loadScript('https://checkout.razorpay.com/v1/checkout.js');
-        if (!res) {
-          toast.error('Razorpay SDK failed to load. Are you online?');
-          setPlacing(false);
-          return;
-        }
-
-        const { data: rzOrder } = await createRazorpayOrderAPI({ orderId: order._id });
-
-        const options = {
-          key: rzOrder.key,
-          amount: rzOrder.amount,
-          currency: rzOrder.currency,
-          name: 'Your E-commerce',
-          description: 'Order Payment',
-          order_id: rzOrder.id,
-          handler: async function (response) {
-            try {
-              await verifyRazorpayPaymentAPI({
-                razorpay_order_id: response.razorpay_order_id,
-                razorpay_payment_id: response.razorpay_payment_id,
-                razorpay_signature: response.razorpay_signature,
-                orderId: order._id,
-              });
-              await clearCart();
-              toast.success('Payment successful & Order placed! 🎉');
-              navigate(`/orders/${order._id}`);
-            } catch (err) {
-              toast.error('Payment verification failed');
-              navigate(`/orders/${order._id}`);
-            }
-          },
-          prefill: {
-            name: user.name,
-            email: user.email,
-            contact: address.phone,
-          },
-          theme: { color: '#6C3EF4' },
-          modal: {
-            ondismiss: function() {
-              toast.warning('Payment cancelled. You can retry from your orders page.');
-              setPlacing(false);
-              navigate(`/orders/${order._id}`);
-            }
-          }
-        };
-
-        const paymentObject = new window.Razorpay(options);
-        paymentObject.open();
-      } else {
-        await clearCart();
-        toast.success('Order placed successfully! 🎉');
-        navigate(`/orders/${order._id}`);
-      }
+      const { data } = await placeOrderAPI({ shippingAddress: address, paymentMethod });
+      await clearCart();
+      toast.success('Order placed successfully! 🎉');
+      navigate(`/orders/${data._id}`);
     } catch (err) {
       toast.error(err.response?.data?.message || 'Failed to place order');
-      setPlacing(false);
-    }
+    } finally { setPlacing(false); }
   };
 
   if (items.length === 0) { navigate('/cart'); return null; }
@@ -221,21 +122,30 @@ const Checkout = () => {
                       </div>
                     ))}
                   </div>
-                  {/* Card input dummy UI removed since Razorpay handles it */}
                   {paymentMethod === 'Card' && (
-                    <div className="mb-4">
-                      <div className="alert alert-info">
-                        <i className="bi bi-info-circle me-2"></i>
-                        You will be redirected to Razorpay securely to enter your card details.
+                    <div className="row g-3 mb-4">
+                      <div className="col-12">
+                        <label style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>Card Number</label>
+                        <input className="form-control-custom" placeholder="1234 5678 9012 3456" value={cardDetails.number} onChange={e => setCardDetails(c => ({ ...c, number: e.target.value }))} required />
+                      </div>
+                      <div className="col-12">
+                        <label style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>Name on Card</label>
+                        <input className="form-control-custom" placeholder="John Doe" value={cardDetails.name} onChange={e => setCardDetails(c => ({ ...c, name: e.target.value }))} required />
+                      </div>
+                      <div className="col-md-6">
+                        <label style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>Expiry</label>
+                        <input className="form-control-custom" placeholder="MM/YY" value={cardDetails.expiry} onChange={e => setCardDetails(c => ({ ...c, expiry: e.target.value }))} required />
+                      </div>
+                      <div className="col-md-6">
+                        <label style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>CVV</label>
+                        <input className="form-control-custom" placeholder="•••" type="password" maxLength="3" value={cardDetails.cvv} onChange={e => setCardDetails(c => ({ ...c, cvv: e.target.value }))} required />
                       </div>
                     </div>
                   )}
                   {paymentMethod === 'UPI' && (
                     <div className="mb-4">
-                      <div className="alert alert-info">
-                        <i className="bi bi-info-circle me-2"></i>
-                        You will be redirected to Razorpay securely to complete your UPI payment.
-                      </div>
+                      <label style={{ fontSize: '13px', color: 'var(--text-muted)', marginBottom: '6px', display: 'block' }}>UPI ID</label>
+                      <input className="form-control-custom" placeholder="yourname@upi" required />
                     </div>
                   )}
                   <div className="d-flex gap-3">
@@ -279,7 +189,7 @@ const Checkout = () => {
 
           {/* Order Summary */}
           <div className="col-lg-5">
-            <div className="card-custom" style={{ position: 'sticky', top: '90px', background: 'rgba(255, 255, 255, 0.85)', backdropFilter: 'blur(12px)', border: '1px solid rgba(0,0,0,0.05)', borderRadius: 'var(--mp-radius-lg)', padding: '30px', boxShadow: 'var(--mp-shadow)' }}>
+            <div className="card-custom" style={{ position: 'sticky', top: '80px' }}>
               <h5 style={{ fontWeight: 700, marginBottom: '20px' }}>Order Summary</h5>
               <div className="d-flex flex-column gap-3 mb-4" style={{ maxHeight: '250px', overflowY: 'auto' }}>
                 {items.map(item => (
@@ -294,37 +204,11 @@ const Checkout = () => {
                 ))}
               </div>
               <div style={{ borderTop: '1px solid var(--border)', paddingTop: '16px' }}>
-                <div className="d-flex justify-content-between mb-3">
-                  <div className="input-group">
-                    <input type="text" className="form-control-custom" placeholder="Coupon code" value={couponCodeInput} onChange={e => setCouponCodeInput(e.target.value)} disabled={!!appliedCoupon} style={{ borderRight: 'none', borderTopRightRadius: 0, borderBottomRightRadius: 0 }} />
-                    <button className="btn btn-outline-secondary" onClick={appliedCoupon ? () => { setAppliedCoupon(null); setCouponCodeInput(''); } : handleApplyCoupon} style={{ borderColor: 'var(--border)', color: appliedCoupon ? 'var(--danger)' : 'var(--text-primary)', borderTopLeftRadius: 0, borderBottomLeftRadius: 0 }}>
-                      {appliedCoupon ? 'Remove' : 'Apply'}
-                    </button>
-                  </div>
-                </div>
-                {appliedCoupon && (
-                  <div className="d-flex justify-content-between mb-2" style={{ fontSize: '14px', color: 'var(--success)' }}>
-                    <span>Discount ({appliedCoupon.code})</span><span>-₹{calculatedDiscount.toLocaleString()}</span>
-                  </div>
-                )}
-                {user?.superCoins > 0 && (
-                  <div className="mb-3" style={{ padding: '12px', background: 'rgba(245,158,11,0.1)', border: '1px solid rgba(245,158,11,0.3)', borderRadius: 'var(--radius-sm)' }}>
-                    <label style={{ display: 'flex', alignItems: 'center', gap: '8px', cursor: 'pointer', margin: 0, fontSize: '14px', color: 'var(--text-primary)' }}>
-                      <input type="checkbox" checked={useSuperCoins} onChange={e => setUseSuperCoins(e.target.checked)} />
-                      <span>Use SuperCoins (Balance: <strong style={{ color: 'var(--warning)' }}>{user.superCoins}</strong>)</span>
-                    </label>
-                  </div>
-                )}
                 {[['Subtotal', `₹${subtotal.toLocaleString()}`], ['Shipping', shipping === 0 ? 'FREE' : `₹${shipping}`], ['Tax (5%)', `₹${tax}`]].map(([l, v]) => (
                   <div key={l} className="d-flex justify-content-between mb-2" style={{ fontSize: '14px', color: 'var(--text-secondary)' }}>
                     <span>{l}</span><span>{v}</span>
                   </div>
                 ))}
-                {useSuperCoins && coinsDiscount > 0 && (
-                  <div className="d-flex justify-content-between mb-2" style={{ fontSize: '14px', color: 'var(--warning)', fontWeight: 600 }}>
-                    <span>SuperCoins Used</span><span>-₹{coinsDiscount.toLocaleString()}</span>
-                  </div>
-                )}
                 <div className="d-flex justify-content-between mt-3" style={{ fontWeight: 800, fontSize: '18px' }}>
                   <span>Total</span><span className="gradient-text">₹{total.toLocaleString()}</span>
                 </div>

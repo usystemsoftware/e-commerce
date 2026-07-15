@@ -8,8 +8,6 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { AuthProvider } from './context/AuthContext';
 import { CartProvider } from './context/CartContext';
 import { WishlistProvider } from './context/WishlistContext';
-import { SettingsProvider } from './context/SettingsContext';
-import { CompareProvider } from './context/CompareContext';
 import { ProtectedRoute, AdminRoute } from './components/ProtectedRoute/ProtectedRoute';
 
 import Navbar from './components/Navbar/Navbar';
@@ -21,12 +19,10 @@ import ProductListing from './pages/user/ProductListing';
 import ProductDetails from './pages/user/ProductDetails';
 import Cart from './pages/user/Cart';
 import Wishlist from './pages/user/Wishlist';
-import Compare from './pages/user/Compare';
 import Checkout from './pages/user/Checkout';
 import MyOrders from './pages/user/MyOrders';
 import OrderDetail from './pages/user/OrderDetail';
 import Profile from './pages/user/Profile';
-import DynamicPage from './pages/user/DynamicPage';
 
 // Auth Pages
 import Login from './pages/auth/Login';
@@ -42,14 +38,6 @@ import ManageOrders from './pages/admin/ManageOrders';
 import ManageUsers from './pages/admin/ManageUsers';
 import ManageCategories from './pages/admin/ManageCategories';
 import StockManagement from './pages/admin/StockManagement';
-import ManageSettings from './pages/admin/ManageSettings';
-import ManageBanners from './pages/admin/ManageBanners';
-import ManageCoupons from './pages/admin/ManageCoupons';
-import ManagePages from './pages/admin/ManagePages';
-import ManageContacts from './pages/admin/ManageContacts';
-import ManageSubscribers from './pages/admin/ManageSubscribers';
-import ManageReviews from './pages/admin/ManageReviews';
-import ContactUs from './pages/user/ContactUs';
 
 // Layout for user-facing pages (with navbar + footer)
 const UserLayout = ({ children }) => (
@@ -64,10 +52,8 @@ function App() {
   return (
     <Router>
       <AuthProvider>
-        <SettingsProvider>
-          <CartProvider>
-            <WishlistProvider>
-              <CompareProvider>
+        <CartProvider>
+          <WishlistProvider>
             <ToastContainer
               position="top-right"
               autoClose={3000}
@@ -85,9 +71,6 @@ function App() {
               <Route path="/" element={<UserLayout><Home /></UserLayout>} />
               <Route path="/products" element={<UserLayout><ProductListing /></UserLayout>} />
               <Route path="/products/:id" element={<UserLayout><ProductDetails /></UserLayout>} />
-              <Route path="/page/:slug" element={<UserLayout><DynamicPage /></UserLayout>} />
-              <Route path="/contact" element={<UserLayout><ContactUs /></UserLayout>} />
-              <Route path="/compare" element={<UserLayout><Compare /></UserLayout>} />
 
               <Route path="/cart" element={
                 <ProtectedRoute>
@@ -129,13 +112,6 @@ function App() {
               <Route path="/admin/users" element={<AdminRoute><ManageUsers /></AdminRoute>} />
               <Route path="/admin/categories" element={<AdminRoute><ManageCategories /></AdminRoute>} />
               <Route path="/admin/stock" element={<AdminRoute><StockManagement /></AdminRoute>} />
-              <Route path="/admin/settings" element={<AdminRoute><ManageSettings /></AdminRoute>} />
-              <Route path="/admin/banners" element={<AdminRoute><ManageBanners /></AdminRoute>} />
-              <Route path="/admin/coupons" element={<AdminRoute><ManageCoupons /></AdminRoute>} />
-              <Route path="/admin/pages" element={<AdminRoute><ManagePages /></AdminRoute>} />
-              <Route path="/admin/contacts" element={<AdminRoute><ManageContacts /></AdminRoute>} />
-              <Route path="/admin/subscribers" element={<AdminRoute><ManageSubscribers /></AdminRoute>} />
-              <Route path="/admin/reviews" element={<AdminRoute><ManageReviews /></AdminRoute>} />
 
               {/* 404 */}
               <Route path="*" element={
@@ -151,10 +127,8 @@ function App() {
                 </UserLayout>
               } />
             </Routes>
-            </CompareProvider>
-            </WishlistProvider>
-          </CartProvider>
-        </SettingsProvider>
+          </WishlistProvider>
+        </CartProvider>
       </AuthProvider>
     </Router>
   );

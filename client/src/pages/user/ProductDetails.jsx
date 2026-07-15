@@ -1,21 +1,17 @@
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { getProductByIdAPI, addReviewAPI, getProductsAPI } from '../../services/api';
+import { getProductByIdAPI, addReviewAPI } from '../../services/api';
 import { useCart } from '../../context/CartContext';
 import { useWishlist } from '../../context/WishlistContext';
 import { useAuth } from '../../context/AuthContext';
-import { useCompare } from '../../context/CompareContext';
-import ProductCard from '../../components/ProductCard/ProductCard';
 import Spinner from '../../components/Spinner/Spinner';
 import { toast } from 'react-toastify';
-import { motion, AnimatePresence } from 'framer-motion';
 
 const ProductDetails = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { addToCart } = useCart();
   const { addToWishlist, removeFromWishlist, isWishlisted } = useWishlist();
-  const { addToCompare, compareItems } = useCompare();
   const { user } = useAuth();
   const [product, setProduct] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -24,10 +20,8 @@ const ProductDetails = () => {
   const [reviewForm, setReviewForm] = useState({ rating: 5, comment: '' });
   const [submitting, setSubmitting] = useState(false);
   const [activeTab, setActiveTab] = useState('description');
-  const [relatedProducts, setRelatedProducts] = useState([]);
 
   const wishlisted = isWishlisted(id);
-  const isCompared = compareItems?.some(p => p._id === id);
 
   useEffect(() => {
     const fetch = async () => {
@@ -35,29 +29,6 @@ const ProductDetails = () => {
       try {
         const { data } = await getProductByIdAPI(id);
         setProduct(data);
-        
-        // Save to recently viewed
-        const recent = JSON.parse(localStorage.getItem('recentlyViewed') || '[]');
-        const existingIndex = recent.findIndex(p => p._id === data._id);
-        if (existingIndex > -1) recent.splice(existingIndex, 1);
-        recent.unshift({
-          _id: data._id,
-          name: data.name,
-          images: data.images,
-          price: data.price,
-          originalPrice: data.price,
-          discountPrice: data.discountPrice,
-          ratings: data.ratings,
-          slug: data.slug || data._id
-        });
-        if (recent.length > 10) recent.pop();
-        localStorage.setItem('recentlyViewed', JSON.stringify(recent));
-
-        const catId = data.category?._id || data.category;
-        if (catId) {
-          const { data: related } = await getProductsAPI({ category: catId, limit: 5 });
-          setRelatedProducts(related.products.filter(p => p._id !== id).slice(0, 4));
-        }
       } catch { navigate('/products'); }
       finally { setLoading(false); }
     };
@@ -114,25 +85,16 @@ const ProductDetails = () => {
         <div className="row g-5">
           {/* Images */}
           <div className="col-lg-5">
-            <AnimatePresence mode="wait">
-              <motion.div 
-                key={selectedImg}
-                initial={{ opacity: 0, scale: 0.98 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0 }}
-                transition={{ duration: 0.3 }}
-                style={{ background: '#f8fafc', borderRadius: 'var(--mp-radius-lg)', overflow: 'hidden', marginBottom: '16px', boxShadow: 'var(--mp-shadow)' }}
-              >
-                <img
-                  src={product.images?.[selectedImg] || `https://picsum.photos/seed/${product._id}/600/500`}
-                  alt={product.name}
-                  style={{ width: '100%', height: '480px', objectFit: 'cover' }}
-                />
-              </motion.div>
-            </AnimatePresence>
-            <div className="d-flex gap-3 overflow-auto pb-2">
+            <div style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', overflow: 'hidden', marginBottom: '12px' }}>
+              <img
+                src={product.images?.[selectedImg] || `https://picsum.photos/seed/${product._id}/600/500`}
+                alt={product.name}
+                style={{ width: '100%', height: '420px', objectFit: 'cover' }}
+              />
+            </div>
+            <div className="d-flex gap-2">
               {(product.images?.length > 0 ? product.images : [`https://picsum.photos/seed/${product._id}/600/500`]).map((img, i) => (
-                <div key={i} onClick={() => setSelectedImg(i)} style={{ width: '80px', height: '80px', border: `2px solid ${selectedImg === i ? 'var(--mp-primary)' : 'transparent'}`, borderRadius: '12px', overflow: 'hidden', cursor: 'pointer', flexShrink: 0, opacity: selectedImg === i ? 1 : 0.6, transition: 'all 0.3s' }}>
+                <div key={i} onClick={() => setSelectedImg(i)} style={{ width: '72px', height: '72px', border: `2px solid ${selectedImg === i ? 'var(--primary)' : 'var(--border)'}`, borderRadius: 'var(--radius-sm)', overflow: 'hidden', cursor: 'pointer', flexShrink: 0 }}>
                   <img src={img} alt="" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                 </div>
               ))}
@@ -197,16 +159,8 @@ const ProductDetails = () => {
               <button
                 onClick={() => wishlisted ? removeFromWishlist(product._id) : addToWishlist(product._id)}
                 style={{ width: '52px', height: '52px', borderRadius: 'var(--radius-sm)', background: 'var(--card-bg)', border: `1px solid ${wishlisted ? 'var(--danger)' : 'var(--border)'}`, color: wishlisted ? 'var(--danger)' : 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', transition: 'all 0.2s' }}
-                title="Wishlist"
               >
                 <i className={`bi bi-heart${wishlisted ? '-fill' : ''}`}></i>
-              </button>
-              <button
-                onClick={() => !isCompared && addToCompare(product)}
-                style={{ width: '52px', height: '52px', borderRadius: 'var(--radius-sm)', background: 'var(--card-bg)', border: `1px solid ${isCompared ? 'var(--primary)' : 'var(--border)'}`, color: isCompared ? 'var(--primary)' : 'var(--text-muted)', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '20px', transition: 'all 0.2s' }}
-                title="Compare"
-              >
-                <i className="bi bi-layers"></i>
               </button>
             </div>
 
@@ -222,14 +176,16 @@ const ProductDetails = () => {
         </div>
 
         {/* Tabs */}
-        <div className="mt-5 pt-4">
-          <div className="d-flex gap-4 mb-4 flex-wrap" style={{ borderBottom: '1px solid var(--mp-border)', paddingBottom: '16px' }}>
+        <div className="mt-5">
+          <div className="d-flex gap-2 mb-4 flex-wrap" style={{ borderBottom: '1px solid var(--border)', paddingBottom: '12px' }}>
             {['description', 'reviews'].map(tab => (
               <button key={tab} onClick={() => setActiveTab(tab)} style={{
-                position: 'relative', background: 'transparent', border: 'none', padding: '8px 4px', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '16px', color: activeTab === tab ? 'var(--mp-primary)' : 'var(--mp-text-light)'
+                background: activeTab === tab ? 'rgba(108,62,244,0.15)' : 'transparent',
+                border: `1px solid ${activeTab === tab ? 'var(--primary)' : 'var(--border)'}`,
+                color: activeTab === tab ? 'var(--primary-light)' : 'var(--text-muted)',
+                padding: '8px 20px', borderRadius: '50px', cursor: 'pointer', fontWeight: 600, fontFamily: 'Outfit', fontSize: '14px'
               }}>
-                {activeTab === tab && <motion.div layoutId="tab-indicator" style={{ position: 'absolute', bottom: -17, left: 0, right: 0, height: 3, background: 'var(--mp-primary)', borderRadius: '3px' }} />}
-                {tab.charAt(0).toUpperCase() + tab.slice(1)} {tab === 'reviews' && `(${product.reviews?.length || 0})`}
+                {tab.charAt(0).toUpperCase() + tab.slice(1)} {tab === 'reviews' && `(${product.numReviews})`}
               </button>
             ))}
           </div>
@@ -245,7 +201,7 @@ const ProductDetails = () => {
             </div>
           ) : (
             <div>
-              {product.reviews?.length > 0 ? product.reviews.map(r => (
+              {product.reviews?.map(r => (
                 <div key={r._id} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '16px', marginBottom: '12px' }}>
                   <div className="d-flex justify-content-between mb-2">
                     <div>
@@ -256,11 +212,7 @@ const ProductDetails = () => {
                   </div>
                   <p style={{ color: 'var(--text-secondary)', margin: 0, fontSize: '14px' }}>{r.comment}</p>
                 </div>
-              )) : (
-                <div style={{ textAlign: 'center', padding: '30px', color: 'var(--text-muted)', background: 'var(--card-bg)', borderRadius: 'var(--radius)', border: '1px solid var(--border)' }}>
-                  No customer reviews yet. Be the first to review!
-                </div>
-              )}
+              ))}
               {user && (
                 <form onSubmit={handleReview} style={{ background: 'var(--card-bg)', border: '1px solid var(--border)', borderRadius: 'var(--radius)', padding: '24px', marginTop: '20px' }}>
                   <h5 style={{ fontWeight: 700, marginBottom: '16px' }}>Write a Review</h5>
@@ -281,38 +233,6 @@ const ProductDetails = () => {
               )}
             </div>
           )}
-        </div>
-
-        {/* Related Products */}
-        {relatedProducts.length > 0 && (
-          <div className="mt-5" style={{ paddingTop: '40px', borderTop: '1px solid var(--border)' }}>
-            <h3 style={{ fontWeight: 800, marginBottom: '24px' }}>You Might Also Like</h3>
-            <div className="row g-4">
-              {relatedProducts.map(p => (
-                <div key={p._id} className="col-6 col-md-3">
-                  <ProductCard product={p} />
-                </div>
-              ))}
-            </div>
-          </div>
-        )}
-      </div>
-
-      {/* Sticky Buy Actions */}
-      <div style={{ position: 'fixed', bottom: 0, left: 0, right: 0, background: 'rgba(255, 255, 255, 0.9)', backdropFilter: 'blur(12px)', borderTop: '1px solid var(--mp-border)', padding: '16px 20px', display: 'flex', justifyContent: 'center', alignItems: 'center', zIndex: 1000, boxShadow: '0 -4px 10px rgba(0,0,0,0.05)' }}>
-        <div className="container d-flex justify-content-between align-items-center">
-          <div className="d-none d-md-flex align-items-center gap-3">
-            <img src={product.images?.[0]} alt={product.name} style={{ width: '48px', height: '48px', objectFit: 'cover', borderRadius: '8px' }} />
-            <div>
-              <div style={{ fontWeight: 600, fontSize: '14px' }}>{product.name}</div>
-              <div style={{ fontWeight: 800, color: 'var(--mp-primary)' }}>₹{price.toLocaleString()}</div>
-            </div>
-          </div>
-          <div className="d-flex gap-3 w-100 w-md-auto justify-content-end">
-             <button className="btn-primary-custom" style={{ minWidth: '160px', padding: '12px', justifyContent: 'center', fontSize: '15px' }} onClick={handleAddToCart} disabled={product.stock === 0}>
-                Add to Cart
-             </button>
-          </div>
         </div>
       </div>
     </div>

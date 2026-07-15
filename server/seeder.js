@@ -32,7 +32,7 @@ const seedDB = async () => {
   const admin = await User.create({
     name: 'Admin User',
     email: 'admin@shop.com',
-    password: 'admin123',
+    password: '#FCFBFE',
     role: 'admin',
   });
   console.log(`✅ Admin created: admin@shop.com / admin123`);

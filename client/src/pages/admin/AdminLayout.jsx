@@ -4,11 +4,18 @@ import { toast } from 'react-toastify';
 
 const navItems = [
   { path: '/admin/dashboard', icon: 'bi-grid', label: 'Dashboard' },
+  { path: '/admin/orders', icon: 'bi-receipt', label: 'Orders' },
   { path: '/admin/products', icon: 'bi-box-seam', label: 'Products' },
   { path: '/admin/categories', icon: 'bi-tag', label: 'Categories' },
-  { path: '/admin/orders', icon: 'bi-receipt', label: 'Orders' },
-  { path: '/admin/users', icon: 'bi-people', label: 'Users' },
   { path: '/admin/stock', icon: 'bi-bar-chart', label: 'Stock' },
+  { path: '/admin/users', icon: 'bi-people', label: 'Users' },
+  { path: '/admin/reviews', icon: 'bi-star', label: 'Reviews' },
+  { path: '/admin/contacts', icon: 'bi-envelope', label: 'Contacts' },
+  { path: '/admin/subscribers', icon: 'bi-envelope-paper', label: 'Subscribers' },
+  { path: '/admin/banners', icon: 'bi-images', label: 'Banners' },
+  { path: '/admin/coupons', icon: 'bi-ticket-perforated', label: 'Coupons' },
+  { path: '/admin/pages', icon: 'bi-file-earmark-text', label: 'Pages' },
+  { path: '/admin/settings', icon: 'bi-gear', label: 'Settings' },
 ];
 
 const AdminLayout = ({ children }) => {
@@ -23,13 +30,13 @@ const AdminLayout = ({ children }) => {
   };
 
   return (
-    <div style={{ display: 'flex', minHeight: '100vh' }}>
+    <div className="admin-theme">
       <div className="admin-sidebar">
         <div className="sidebar-brand">
           <span className="gradient-text"><i className="bi bi-shield-lock-fill me-2"></i>ShopZone</span>
-          <div style={{ fontSize: '11px', color: 'var(--text-muted)', fontWeight: 400, marginTop: '4px' }}>Admin Panel</div>
+          <div style={{ fontSize: '11px', color: 'var(--admin-text-muted)', fontWeight: 500, marginTop: '4px', letterSpacing: '1px', textTransform: 'uppercase' }}>Admin Panel</div>
         </div>
-        <div style={{ padding: '20px 0' }}>
+        <div style={{ padding: '20px 0 110px 0' }}>
           {navItems.map(item => (
             <div key={item.path} className="nav-item">
               <Link to={item.path} className={location.pathname === item.path ? 'active' : ''}>
@@ -38,15 +45,19 @@ const AdminLayout = ({ children }) => {
             </div>
           ))}
         </div>
-        <div style={{ position: 'absolute', bottom: 0, width: '100%', borderTop: '1px solid var(--border)', padding: '16px 20px' }}>
-          <div style={{ fontSize: '12px', color: 'var(--text-muted)', marginBottom: '8px' }}>Logged in as</div>
-          <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '10px' }}>{user?.name}</div>
-          <button onClick={handleLogout} style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--danger)', padding: '8px 14px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'Outfit', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', width: '100%' }}>
+        <div style={{ position: 'absolute', bottom: 0, width: '100%', borderTop: '1px solid var(--admin-border)', padding: '16px 20px', backdropFilter: 'var(--admin-glass-blur)' }}>
+          <div style={{ fontSize: '12px', color: 'var(--admin-text-muted)', marginBottom: '8px' }}>Logged in as</div>
+          <div style={{ fontWeight: 600, fontSize: '14px', marginBottom: '10px', color: 'var(--admin-text)' }}>{user?.name || 'Administrator'}</div>
+          <button onClick={handleLogout} style={{ background: 'rgba(239,68,68,0.1)', border: '1px solid rgba(239,68,68,0.2)', color: 'var(--danger)', padding: '8px 14px', borderRadius: 'var(--radius-sm)', cursor: 'pointer', fontFamily: 'Calibri', fontSize: '13px', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '8px', width: '100%', transition: 'all 0.3s' }} className="logout-btn">
             <i className="bi bi-box-arrow-left"></i> Logout
           </button>
         </div>
       </div>
-      <div className="admin-content">{children}</div>
+      <div className="admin-content">
+        <div className="container-fluid p-0">
+          {children}
+        </div>
+      </div>
     </div>
   );
 };

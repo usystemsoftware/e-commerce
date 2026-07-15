@@ -8,7 +8,13 @@ const getProducts = asyncHandler(async (req, res) => {
   const page = Number(req.query.page) || 1;
 
   const keyword = req.query.keyword
-    ? { name: { $regex: req.query.keyword, $options: 'i' } }
+    ? {
+        $or: [
+          { name: { $regex: req.query.keyword, $options: 'i' } },
+          { brand: { $regex: req.query.keyword, $options: 'i' } },
+          { description: { $regex: req.query.keyword, $options: 'i' } },
+        ],
+      }
     : {};
 
   const mongoose = require('mongoose');
@@ -154,4 +160,43 @@ const adminGetProducts = asyncHandler(async (req, res) => {
   res.json(products);
 });
 
-module.exports = { getProducts, getFeaturedProducts, getProductById, createProduct, updateProduct, deleteProduct, addReview, adminGetProducts };
+// @desc  Get all reviews (Admin)
+// @route GET /api/products/admin/reviews
+const adminGetReviews = asyncHandler(async (req, res) => {
+  const products = await Product.find({ 'reviews.0': { $exists: true } }, 'name reviews');
+  let allReviews = [];
+  products.forEach(p => {
+    p.reviews.forEach(r => {
+      allReviews.push({
+        _id: r._id,
+        productId: p._id,
+        productName: p.name,
+        user: r.user,
+        name: r.name,
+        rating: r.rating,
+        comment: r.comment,
+        createdAt: r.createdAt
+      });
+    });
+  });
+  allReviews.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+  res.json(allReviews);
+});
+
+// @desc  Delete a review (Admin)
+// @route DELETE /api/products/:productId/reviews/:reviewId
+const adminDeleteReview = asyncHandler(async (req, res) => {
+  const product = await Product.findById(req.params.productId);
+  if (!product) { res.status(404); throw new Error('Product not found'); }
+
+  product.reviews = product.reviews.filter(r => r._id.toString() !== req.params.reviewId);
+  product.numReviews = product.reviews.length;
+  product.ratings = product.reviews.length > 0 
+    ? product.reviews.reduce((acc, r) => acc + r.rating, 0) / product.reviews.length 
+    : 0;
+
+  await product.save();
+  res.json({ message: 'Review deleted successfully' });
+});
+
+module.exports = { getProducts, getFeaturedProducts, getProductById, createProduct, updateProduct, deleteProduct, addReview, adminGetProducts, adminGetReviews, adminDeleteReview };

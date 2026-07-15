@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema(
     avatar: { type: String, default: '' },
     addresses: [addressSchema],
     isBlocked: { type: Boolean, default: false },
+    superCoins: { type: Number, default: 0 },
   },
   { timestamps: true }
 );

@@ -131,7 +131,7 @@ const Home = () => {
           
           <div className="promo-neo-grid">
             <div className="promo-neo-cell span-2 span-row-2">
-              <img src="https://images.unsplash.com/photo-1550537687-c9a0c270da09?q=80&w=800&auto=format&fit=crop" alt="Cyber Gear" />
+              <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=800&auto=format&fit=crop" alt="Cyber Gear" />
               <div className="promo-neo-overlay">
                 <div className="promo-neo-tag">ACID COLLECTION</div>
                 <div className="promo-neo-title">CYBER GEAR V1</div>
@@ -153,8 +153,8 @@ const Home = () => {
             </div>
             <div className="promo-neo-cell span-2" style={{ background: 'var(--acid)' }}>
               <div className="promo-neo-overlay" style={{ background: 'none' }}>
-                <div className="promo-neo-title" style={{ color: 'var(--ink)' }}>GAME ON.</div>
                 <div className="promo-neo-tag" style={{ color: 'var(--ink)' }}>TECH ACCS</div>
+                <div className="promo-neo-title" style={{ color: 'var(--ink)' }}>GAME ON.</div>
               </div>
             </div>
           </div>
@@ -162,26 +162,28 @@ const Home = () => {
       </section>
 
       {/* ── FEATURES STRIP ─────────────────── */}
-      <div className="features-neo-strip">
-        <div className="feature-neo-item">
-          <div className="feature-neo-icon"><i className="bi bi-lightning-fill"></i></div>
-          <div>
-            <div className="feature-neo-title">FAST AF DELIVERY</div>
-            <div className="feature-neo-desc">Same day dispatch. You want it, you get it.</div>
+      <div className="container-neo" style={{ paddingBottom: '80px' }}>
+        <div className="features-neo-strip" style={{ borderLeft: '2px solid var(--ink)', borderRight: '2px solid var(--ink)' }}>
+          <div className="feature-neo-item">
+            <div className="feature-neo-icon"><i className="bi bi-lightning-fill"></i></div>
+            <div>
+              <div className="feature-neo-title">FAST AF DELIVERY</div>
+              <div className="feature-neo-desc">Same day dispatch. You want it, you get it.</div>
+            </div>
           </div>
-        </div>
-        <div className="feature-neo-item">
-          <div className="feature-neo-icon"><i className="bi bi-shield-check"></i></div>
-          <div>
-            <div className="feature-neo-title">100% LEGIT</div>
-            <div className="feature-neo-desc">No fakes here. Authenticity guaranteed.</div>
+          <div className="feature-neo-item">
+            <div className="feature-neo-icon"><i className="bi bi-shield-check"></i></div>
+            <div>
+              <div className="feature-neo-title">100% LEGIT</div>
+              <div className="feature-neo-desc">No fakes here. Authenticity guaranteed.</div>
+            </div>
           </div>
-        </div>
-        <div className="feature-neo-item">
-          <div className="feature-neo-icon"><i className="bi bi-arrow-return-left"></i></div>
-          <div>
-            <div className="feature-neo-title">NO BS RETURNS</div>
-            <div className="feature-neo-desc">Don't like it? Send it back. No questions.</div>
+          <div className="feature-neo-item">
+            <div className="feature-neo-icon"><i className="bi bi-arrow-return-left"></i></div>
+            <div>
+              <div className="feature-neo-title">NO BS RETURNS</div>
+              <div className="feature-neo-desc">Don't like it? Send it back. No questions.</div>
+            </div>
           </div>
         </div>
       </div>

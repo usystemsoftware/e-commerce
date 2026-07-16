@@ -2433,7 +2433,7 @@ body {
   padding: 36px 40px;
   border-right: 2px solid var(--ink);
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 20px;
 }
 

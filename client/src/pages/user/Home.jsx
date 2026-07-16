@@ -131,7 +131,7 @@ const Home = () => {
           
           <div className="promo-neo-grid">
             <div className="promo-neo-cell span-2 span-row-2">
-              <img src="https://images.unsplash.com/photo-1542831371-29b0f74f9713?q=80&w=800&auto=format&fit=crop" alt="Cyber Gear" />
+              <img src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=800&auto=format&fit=crop" alt="Cyber Gear" />
               <div className="promo-neo-overlay">
                 <div className="promo-neo-tag">ACID COLLECTION</div>
                 <div className="promo-neo-title">CYBER GEAR V1</div>

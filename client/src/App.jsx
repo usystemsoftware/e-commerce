@@ -23,6 +23,7 @@ import Checkout from './pages/user/Checkout';
 import MyOrders from './pages/user/MyOrders';
 import OrderDetail from './pages/user/OrderDetail';
 import Profile from './pages/user/Profile';
+import InfoPage from './pages/user/InfoPage';
 
 // Auth Pages
 import Login from './pages/auth/Login';
@@ -71,6 +72,7 @@ function App() {
               <Route path="/" element={<UserLayout><Home /></UserLayout>} />
               <Route path="/products" element={<UserLayout><ProductListing /></UserLayout>} />
               <Route path="/products/:id" element={<UserLayout><ProductDetails /></UserLayout>} />
+              <Route path="/info/:pageId" element={<UserLayout><InfoPage /></UserLayout>} />
 
               <Route path="/cart" element={
                 <ProtectedRoute>

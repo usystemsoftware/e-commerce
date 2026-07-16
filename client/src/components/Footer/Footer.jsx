@@ -26,18 +26,18 @@ const Footer = () => {
         <div>
           <div className="footer-neo-col-title">SUPPORT</div>
           <ul className="footer-neo-links">
-            <li><Link to="#">FAQ</Link></li>
-            <li><Link to="#">SHIPPING INFO</Link></li>
-            <li><Link to="#">RETURNS</Link></li>
-            <li><Link to="#">CONTACT US</Link></li>
+            <li><Link to="/info/faq">FAQ</Link></li>
+            <li><Link to="/info/shipping">SHIPPING INFO</Link></li>
+            <li><Link to="/info/returns">RETURNS</Link></li>
+            <li><Link to="/info/contact">CONTACT US</Link></li>
           </ul>
         </div>
         <div>
           <div className="footer-neo-col-title">LEGAL</div>
           <ul className="footer-neo-links">
-            <li><Link to="#">TERMS & CONDITIONS</Link></li>
-            <li><Link to="#">PRIVACY POLICY</Link></li>
-            <li><Link to="#">COOKIE POLICY</Link></li>
+            <li><Link to="/info/terms">TERMS & CONDITIONS</Link></li>
+            <li><Link to="/info/privacy">PRIVACY POLICY</Link></li>
+            <li><Link to="/info/cookies">COOKIE POLICY</Link></li>
           </ul>
         </div>
       </div>

@@ -165,7 +165,7 @@ const ProductListing = () => {
             ) : (
               <div className={view === 'grid' ? 'row g-4' : 'd-flex flex-column gap-3'}>
                 {products.map(p => (
-                  <div key={p._id} className={view === 'grid' ? 'col-6 col-md-4' : ''}>
+                  <div key={p._id} className={view === 'grid' ? 'col-6 col-md-4 d-flex' : 'd-flex w-100'}>
                     <ProductCard product={p} />
                   </div>
                 ))}

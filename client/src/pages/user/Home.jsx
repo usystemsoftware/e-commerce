@@ -115,7 +115,7 @@ const Home = () => {
           {loading ? <Spinner /> : (
             <div className="grid-neo-4-padded">
               {featured.map(product => (
-                <div key={product._id}><ProductCard product={product} /></div>
+                <ProductCard key={product._id} product={product} />
               ))}
             </div>
           )}
@@ -146,15 +146,15 @@ const Home = () => {
               </div>
             </div>
             <div className="promo-neo-cell">
-              <div className="promo-neo-overlay dark" style={{ background: 'var(--ink)' }}>
+              <div className="promo-neo-overlay dark">
                 <div className="promo-neo-stat">50%</div>
                 <div className="promo-neo-stat-label">OFF EVERYTHING</div>
               </div>
             </div>
-            <div className="promo-neo-cell span-2" style={{ background: 'var(--acid)' }}>
+            <div className="promo-neo-cell span-2 promo-neo-cell-accent">
               <div className="promo-neo-overlay" style={{ background: 'none' }}>
-                <div className="promo-neo-tag" style={{ color: 'var(--ink)' }}>TECH ACCS</div>
-                <div className="promo-neo-title" style={{ color: 'var(--ink)' }}>GAME ON.</div>
+                <div className="promo-neo-tag" style={{ color: '#ffffff' }}>TECH ACCS</div>
+                <div className="promo-neo-title" style={{ color: '#ffffff' }}>GAME ON.</div>
               </div>
             </div>
           </div>
@@ -163,7 +163,7 @@ const Home = () => {
 
       {/* ── FEATURES STRIP ─────────────────── */}
       <div className="container-neo" style={{ paddingBottom: '80px' }}>
-        <div className="features-neo-strip" style={{ borderLeft: '2px solid var(--ink)', borderRight: '2px solid var(--ink)' }}>
+        <div className="features-neo-strip">
           <div className="feature-neo-item">
             <div className="feature-neo-icon"><i className="bi bi-lightning-fill"></i></div>
             <div>

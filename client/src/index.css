@@ -26,12 +26,13 @@
   --text-secondary: #4b5563;
   --text-muted: #6b7280;
 
-  --gradient-primary: linear-gradient(135deg, var(--neon-purple) 0%, var(--primary) 100%);
-  --gradient-secondary: linear-gradient(135deg, var(--neon-pink) 0%, var(--secondary) 100%);
-  --gradient-hero: radial-gradient(circle at top, rgba(176, 38, 255, 0.08), transparent 60%), radial-gradient(circle at bottom right, rgba(0, 225, 255, 0.08), transparent 50%), var(--dark);
+  --gradient-primary: linear-gradient(135deg, var(--primary-light) 0%, var(--primary) 100%);
+  --gradient-secondary: linear-gradient(135deg, var(--secondary) 0%, var(--primary) 100%);
+  --gradient-hero: radial-gradient(circle at top, rgba(179, 42, 63, 0.08), transparent 60%), radial-gradient(circle at bottom right, rgba(0, 225, 255, 0.08), transparent 50%), var(--dark);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12): --shadow-neon: 0 0 15px rgba(176, 38, 255, 0.2);
+  --shadow-lg: 0 20px 50px rgba(0, 0, 0, 0.12);
+  --shadow-neon: 0 0 15px rgba(179, 42, 63, 0.2);
   --radius: 16px;
   --radius-sm: 10px;
   --radius-lg: 24px;
@@ -1825,8 +1826,8 @@ body {
 
 /* ── CATEGORIES STRIP ──────────────────── */
 .categories-strip-neo {
-  background: var(--chalk);
-  border-bottom: 2px solid var(--ink);
+  background: var(--dark-2);
+  border-bottom: 1px solid var(--border);
   padding: 32px 48px;
   display: flex;
   align-items: center;
@@ -1838,7 +1839,7 @@ body {
   font-family: var(--font-display);
   font-size: 1.1rem;
   letter-spacing: 3px;
-  color: var(--muted);
+  color: var(--text-secondary);
   flex-shrink: 0;
   margin-right: 8px;
 }
@@ -1847,24 +1848,28 @@ body {
   display: flex;
   align-items: center;
   gap: 8px;
-  background: var(--chalk-2);
-  border: 2px solid var(--chalk-3);
+  background: var(--dark-3);
+  border: 1px solid var(--border);
+  border-radius: 30px;
   padding: 8px 18px;
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.15s var(--ease);
+  transition: all 0.3s ease;
   text-decoration: none;
-  color: var(--ink);
+  color: var(--text-primary);
   letter-spacing: 0.5px;
+  box-shadow: var(--shadow-sm);
 }
 
 .cat-neo-chip:hover,
 .cat-neo-chip.active {
-  background: var(--ink);
-  color: var(--acid);
-  border-color: var(--ink);
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
 }
 
 .cat-neo-chip-icon {
@@ -1878,7 +1883,7 @@ body {
   justify-content: space-between;
   margin-bottom: 40px;
   padding-bottom: 16px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 1px solid var(--border);
 }
 
 .section-neo-title {
@@ -1886,13 +1891,13 @@ body {
   font-size: 3.5rem;
   letter-spacing: 3px;
   line-height: 1;
-  color: var(--ink);
+  color: var(--text-primary);
 }
 
 .section-neo-title .num {
   font-family: var(--font-mono);
   font-size: 0.8rem;
-  color: var(--muted);
+  color: var(--primary);
   letter-spacing: 2px;
   display: block;
   margin-bottom: 4px;
@@ -1903,22 +1908,26 @@ body {
   font-size: 11px;
   letter-spacing: 3px;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--text-secondary);
   text-decoration: none;
-  border-bottom: 1px solid var(--muted);
-  padding-bottom: 2px;
-  transition: all 0.2s;
-  cursor: pointer;
   background: none;
   border: none;
   display: flex;
   align-items: center;
   gap: 6px;
+  padding: 8px 16px;
+  border-radius: 30px;
+  border: 1px solid var(--border);
+  transition: all 0.3s ease;
+  cursor: pointer;
 }
 
 .section-neo-link:hover {
-  color: var(--ink);
-  border-bottom-color: var(--ink);
+  color: #ffffff;
+  background: var(--primary);
+  border-color: var(--primary);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-sm);
 }
 
 /* ── PRODUCT CARD ──────────────────────── */
@@ -2140,20 +2149,22 @@ body {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   grid-template-rows: 280px 240px;
-  gap: 3px;
-  background: var(--ink);
-  border: 2px solid var(--ink);
+  gap: 24px;
 }
 
 .promo-neo-cell {
   position: relative;
   overflow: hidden;
   cursor: pointer;
-  transition: filter 0.3s;
+  transition: all 0.3s ease;
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  background: var(--dark-2);
 }
 
 .promo-neo-cell:hover {
-  filter: brightness(1.08);
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-md);
 }
 
 .promo-neo-cell.span-2 {
@@ -2169,13 +2180,18 @@ body {
   height: 100%;
   object-fit: cover;
   display: block;
+  transition: transform 0.5s ease;
+}
+
+.promo-neo-cell:hover img {
+  transform: scale(1.05);
 }
 
 .promo-neo-overlay {
   position: absolute;
   inset: 0;
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, transparent 50%);
-  padding: 24px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 100%);
+  padding: 32px;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
@@ -2183,10 +2199,16 @@ body {
 }
 
 .promo-neo-overlay.dark {
-  background: var(--ink-2);
+  background: var(--dark-2);
+  border: 1px solid var(--border);
   justify-content: center;
   align-items: center;
   text-align: center;
+}
+
+.promo-neo-cell-accent {
+  background: var(--gradient-primary);
+  border: none;
 }
 
 .promo-neo-tag {
@@ -2421,9 +2443,10 @@ body {
 
 /* ── FEATURES ────────────────────────────── */
 .features-neo-strip {
-  background: var(--chalk-2);
-  border-top: 2px solid var(--ink);
-  border-bottom: 2px solid var(--ink);
+  background: var(--dark-2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-md);
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   /* divide-x: 2px; is a tailwind concept, we use border-right */
@@ -2431,7 +2454,7 @@ body {
 
 .feature-neo-item {
   padding: 36px 40px;
-  border-right: 2px solid var(--ink);
+  border-right: 1px solid var(--border);
   display: flex;
   align-items: center;
   gap: 20px;
@@ -2442,28 +2465,31 @@ body {
 }
 
 .feature-neo-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--ink);
-  color: var(--acid);
+  width: 52px;
+  height: 52px;
+  background: rgba(179, 42, 63, 0.1); /* Primary theme color with 10% opacity */
+  color: var(--primary);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  font-size: 20px;
+  font-size: 24px;
+  border-radius: 50%;
+  box-shadow: var(--shadow-sm);
 }
 
 .feature-neo-title {
   font-family: var(--font-display);
   font-size: 1.2rem;
   letter-spacing: 2px;
-  margin-bottom: 4px;
+  margin-bottom: 6px;
+  color: var(--text-primary);
 }
 
 .feature-neo-desc {
-  font-size: 13px;
-  color: var(--muted);
-  font-weight: 300;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 400;
   line-height: 1.6;
 }
 
@@ -2601,6 +2627,7 @@ body {
   text-decoration: none;
   border: 1px solid var(--border);
   height: 100%;
+  width: 100%;
 }
 
 .product-card-flip:hover {
@@ -2610,7 +2637,7 @@ body {
 .product-flip-img-wrap {
   position: relative;
   width: 100%;
-  aspect-ratio: 3/4;
+  aspect-ratio: 1 / 1;
   overflow: hidden;
   background: var(--dark-3);
 }
